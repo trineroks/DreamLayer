@@ -1,7 +1,9 @@
 #pragma once
 #include "GameScreen.h"
 #include "../Sprite.h"
+#include "../SpriteBank.h"
 
+class Sprite;
 class MainMenu : public GameScreen {
 public:
 	MainMenu();
@@ -19,7 +21,6 @@ public:
 	void mouseMoved(int x, int y) override;
 
 	void update(float deltaTime) override;
-
 private:
 	Sprite* sprite;
 };

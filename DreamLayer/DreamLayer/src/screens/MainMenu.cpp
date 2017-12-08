@@ -3,7 +3,7 @@
 
 
 MainMenu::MainMenu() {
-	sprite = new Sprite("assets/GhostAvi.png");
+	sprite = new Sprite(SpriteBank::Instance().Player);
 }
 
 
@@ -28,22 +28,35 @@ void MainMenu::update(float deltaTime) {
 }
 
 void MainMenu::keyUp(SDL_Keycode key) {
-	
+	switch (key) {
+	case SDLK_UP:
+		sprite->delty = 0;
+		break;
+	case SDLK_DOWN:
+		sprite->delty = 0;
+		break;
+	case SDLK_RIGHT:
+		sprite->deltx = 0;
+		break;
+	case SDLK_LEFT:
+		sprite->deltx = 0;
+		break;
+	}
 }
 
 void MainMenu::keyDown(SDL_Keycode key) {
 	switch (key) {
 	case SDLK_UP:
-		sprite->y -= 1;
+		sprite->delty = -1;
 		break;
 	case SDLK_DOWN:
-		sprite->y += 1;
+		sprite->delty = 1;
 		break;
 	case SDLK_RIGHT:
-		sprite->x += 1;
+		sprite->deltx = 1;
 		break;
 	case SDLK_LEFT:
-		sprite->x -= 1;
+		sprite->deltx = -1;
 		break;
 	}
 }

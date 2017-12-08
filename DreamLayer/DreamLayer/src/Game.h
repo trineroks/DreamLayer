@@ -2,8 +2,9 @@
 
 #include "SDL.h"
 #include "SDL_image.h"
+#include "SpriteBank.h"
 
-#include "screens/stateMachine/StateMachine.h"
+#include "stateMachine/StateMachine.h"
 
 #include <stdio.h>
 

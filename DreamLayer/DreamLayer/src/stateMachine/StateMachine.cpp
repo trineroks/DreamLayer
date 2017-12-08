@@ -4,7 +4,7 @@ StateMachine::StateMachine() {
 	exit = false;
 }
 
-StateMachine &StateMachine::getInstance() {
+StateMachine &StateMachine::Instance() {
 	static StateMachine instance;
 	return instance;
 }

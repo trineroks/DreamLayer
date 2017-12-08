@@ -1,11 +1,10 @@
 #pragma once
-#include "SDL.h"
 #include "TextureManager.h"
 
+class TextureRegion;
 class Sprite {
 public:
-	Sprite(const char* path);
-	void setTexture(const char* path);
+	Sprite(TextureRegion *texRegion);
 	void update();
 
 	~Sprite();
@@ -13,8 +12,10 @@ public:
 	int x = 0;
 	int y = 0;
 
+	int deltx = 0;
+	int delty = 0;
+
 private:
-	SDL_Texture *texture;
-	SDL_Rect src, dest;
+	TextureRegion *region;
 };
 

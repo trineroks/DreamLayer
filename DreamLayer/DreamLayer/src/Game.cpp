@@ -39,14 +39,16 @@ void Game::init(const char *title, int x, int y, int width, int height, bool ful
 	else {
 		isRunning = false;
 	}
+
 }
 
 void Game::run() {
-	StateMachine::getInstance().pushScreen(new MainMenu());
-	while (!StateMachine::getInstance().getExitState()) {
+	SpriteBank::Instance().load();
+	StateMachine::Instance().pushScreen(new MainMenu());
+	while (!StateMachine::Instance().getExitState()) {
 		delta = (SDL_GetTicks() - timeLastFrame) / 1000.0f;
 		SDL_RenderClear(renderer);
-		StateMachine::getInstance().gameTick(delta);
+		StateMachine::Instance().gameTick(delta);
 		SDL_RenderPresent(renderer);
 	}
 	clear();

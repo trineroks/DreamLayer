@@ -1,12 +1,12 @@
 #pragma once
-#include "../GameScreen.h"
-#include "../../Game.h"
-#include "../MainMenu.h"
+#include "../screens/GameScreen.h"
+#include "../screens/MainMenu.h"
+#include "../Game.h"
 #include <vector>
 
 class StateMachine {
 public:
-	static StateMachine &getInstance();
+	static StateMachine &Instance();
 
 	void changeScreen(GameScreen* screen);
 	void pushScreen(GameScreen* screen);
