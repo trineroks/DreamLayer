@@ -146,6 +146,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Map.cpp" />
     <ClCompile Include="src\SpriteBank.cpp" />
     <ClCompile Include="src\Sprite.cpp" />
     <ClCompile Include="src\screens\MainMenu.cpp" />
@@ -156,6 +157,8 @@
     <ClCompile Include="src\TextureRegion.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Map.h" />
+    <ClInclude Include="src\Rect.h" />
     <ClInclude Include="src\SpriteBank.h" />
     <ClInclude Include="src\Sprite.h" />
     <ClInclude Include="src\screens\MainMenu.h" />

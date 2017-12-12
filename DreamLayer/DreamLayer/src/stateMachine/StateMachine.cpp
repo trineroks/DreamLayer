@@ -16,7 +16,7 @@ void StateMachine::changeScreen(GameScreen* screen) {
 }
 
 void StateMachine::popScreen() {
-	GameScreen *screen;
+	GameScreen* screen;
 	if (!screenStack.empty()) {
 		screen = screenStack.back();
 		screen->cleanUp();

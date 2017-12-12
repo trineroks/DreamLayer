@@ -7,6 +7,7 @@
 #include "stateMachine/StateMachine.h"
 
 #include <stdio.h>
+#include <memory>
 
 class Game {
 public:

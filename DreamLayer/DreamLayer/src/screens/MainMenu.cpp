@@ -4,6 +4,11 @@
 
 MainMenu::MainMenu() {
 	sprite = new Sprite(SpriteBank::Instance().Player);
+	sprite->setCollisionBox(new Rect(0, 0, 80, 80));
+
+	nonControlled = new Sprite(SpriteBank::Instance().Player);
+	nonControlled->setCollisionBox(new Rect(0, 0, 80, 80));
+	nonControlled->setPosition(300, 300);
 }
 
 
@@ -11,7 +16,8 @@ MainMenu::~MainMenu() {
 }
 
 void MainMenu::cleanUp() {
-
+	delete sprite;
+	delete nonControlled;
 }
 
 void MainMenu::pause() {
@@ -24,7 +30,7 @@ void MainMenu::resume() {
 
 void MainMenu::update(float deltaTime) {
 	sprite->update();
-	printf("Sprite position: %d, %d\n", sprite->x, sprite->y);
+	nonControlled->update();
 }
 
 void MainMenu::keyUp(SDL_Keycode key) {

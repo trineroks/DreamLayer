@@ -9,6 +9,7 @@
     <ClCompile Include="src\stateMachine\StateMachine.cpp" />
     <ClCompile Include="src\SpriteBank.cpp" />
     <ClCompile Include="src\TextureRegion.cpp" />
+    <ClCompile Include="Map.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Game.h" />
@@ -19,5 +20,7 @@
     <ClInclude Include="src\stateMachine\StateMachine.h" />
     <ClInclude Include="src\SpriteBank.h" />
     <ClInclude Include="src\TextureRegion.h" />
+    <ClInclude Include="Map.h" />
+    <ClInclude Include="src\Rect.h" />
   </ItemGroup>
 </Project>

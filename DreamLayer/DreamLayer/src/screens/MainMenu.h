@@ -2,6 +2,7 @@
 #include "GameScreen.h"
 #include "../Sprite.h"
 #include "../SpriteBank.h"
+#include "../Rect.h"
 
 class Sprite;
 class MainMenu : public GameScreen {
@@ -23,5 +24,7 @@ public:
 	void update(float deltaTime) override;
 private:
 	Sprite* sprite;
+	Sprite* nonControlled;
+	Rect* test;
 };
 

@@ -3,6 +3,7 @@
 #include "../screens/MainMenu.h"
 #include "../Game.h"
 #include <vector>
+#include <memory>
 
 class StateMachine {
 public:
