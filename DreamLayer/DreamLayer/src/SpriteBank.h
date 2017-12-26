@@ -15,5 +15,7 @@ public:
 	void clear();
 
 	TextureRegion* Player;
+	TextureRegion* TestCollisionBox;
+	TextureRegion* Spy;
 };
 

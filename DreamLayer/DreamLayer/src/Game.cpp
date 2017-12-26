@@ -45,8 +45,11 @@ void Game::init(const char *title, int x, int y, int width, int height, bool ful
 void Game::run() {
 	SpriteBank::Instance().load();
 	StateMachine::Instance().pushScreen(new MainMenu());
+	float time_seconds = SDL_GetTicks();
 	while (!StateMachine::Instance().getExitState()) {
-		delta = (SDL_GetTicks() - timeLastFrame) / 1000.0f;
+		float new_time = SDL_GetTicks();
+		float delta = new_time - time_seconds;
+		time_seconds = new_time;
 		SDL_RenderClear(renderer);
 		StateMachine::Instance().gameTick(delta);
 		SDL_RenderPresent(renderer);

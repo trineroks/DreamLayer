@@ -12,7 +12,7 @@ StateMachine &StateMachine::Instance() {
 void StateMachine::changeScreen(GameScreen* screen) {
 	if (!screenStack.empty())
 		popScreen();
-	screenStack.push_back(screen);
+	pushScreen(screen);
 }
 
 void StateMachine::popScreen() {
@@ -26,6 +26,7 @@ void StateMachine::popScreen() {
 }
 
 void StateMachine::pushScreen(GameScreen* screen) {
+	screen->init();
 	screenStack.push_back(screen);
 }
 

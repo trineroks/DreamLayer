@@ -7,11 +7,10 @@
 #include "stateMachine/StateMachine.h"
 
 #include <stdio.h>
-#include <memory>
 
 class Game {
 public:
-	struct Camera {
+		struct Camera {
 		int x;
 		int y;
 	};
@@ -31,9 +30,6 @@ public:
 	static Camera camera;
 
 private:
-	float delta;
-	Uint32 timeLastFrame;
-
 	int counter = 0;
 	bool isRunning;
 	SDL_Window *window;

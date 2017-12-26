@@ -9,7 +9,12 @@
     <ClCompile Include="src\stateMachine\StateMachine.cpp" />
     <ClCompile Include="src\SpriteBank.cpp" />
     <ClCompile Include="src\TextureRegion.cpp" />
-    <ClCompile Include="Map.cpp" />
+    <ClCompile Include="src\Map.cpp" />
+    <ClCompile Include="src\entity\Entity.cpp" />
+    <ClCompile Include="src\Animation.cpp" />
+    <ClCompile Include="src\Vector2D.cpp" />
+    <ClCompile Include="src\entity\AnimatedSpriteComponent.cpp" />
+    <ClCompile Include="src\entity\EntityManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Game.h" />
@@ -20,7 +25,16 @@
     <ClInclude Include="src\stateMachine\StateMachine.h" />
     <ClInclude Include="src\SpriteBank.h" />
     <ClInclude Include="src\TextureRegion.h" />
-    <ClInclude Include="Map.h" />
     <ClInclude Include="src\Rect.h" />
+    <ClInclude Include="src\Constants.h" />
+    <ClInclude Include="src\Map.h" />
+    <ClInclude Include="src\entity\Entity.h" />
+    <ClInclude Include="src\Animation.h" />
+    <ClInclude Include="src\entity\Components.h" />
+    <ClInclude Include="src\entity\SpriteComponent.h" />
+    <ClInclude Include="src\entity\TransformComponent.h" />
+    <ClInclude Include="src\Vector2D.h" />
+    <ClInclude Include="src\entity\AnimatedSpriteComponent.h" />
+    <ClInclude Include="src\entity\EntityManager.h" />
   </ItemGroup>
 </Project>
