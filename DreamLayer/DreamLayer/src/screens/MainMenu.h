@@ -4,6 +4,8 @@
 #include "../SpriteBank.h"
 #include "../Rect.h"
 #include "../Constants.h"
+#include "../Map.h"
+#include <vector>
 
 class Sprite;
 class Rect;
@@ -27,8 +29,20 @@ public:
 	void update(float deltaTime) override;
 	void draw();
 private:
-	Sprite* sprite;
-	Sprite* nonControlled;
+	std::vector<Sprite> bullets;
+
+	Sprite sprite;
+	Sprite nonControlled;
+	Sprite crosshair;
+	Map map;
+
 	Rect* test;
+
+	void testAngleUpdate();
+
+	bool editing = false;
+
+	int mousex = 0;
+	int mousey = 0;
 };
 

@@ -75,7 +75,7 @@ void AnimatedSpriteComponent::draw() {
 		xfinal = transform->pos.x;
 	}
 
-	TextureManager::drawResized(&curr->getFrame(currFrame), (int)xfinal, (int)yfinal, (int)wfinal, (int)hfinal);
+	//TextureManager::drawResized(&curr->getFrame(currFrame), (int)xfinal, (int)yfinal, (int)wfinal, (int)hfinal);
 }
 
 void AnimatedSpriteComponent::scale(float _w, float _h) {

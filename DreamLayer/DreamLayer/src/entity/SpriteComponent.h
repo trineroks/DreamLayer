@@ -18,7 +18,7 @@ public:
 	}
 
 	void draw() {
-		TextureManager::draw(region, transform->pos.x, transform->pos.y);
+		//TextureManager::draw(region, transform->pos.x, transform->pos.y);
 	}
 
 };

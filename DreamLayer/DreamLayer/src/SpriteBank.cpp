@@ -1,4 +1,5 @@
 #include "SpriteBank.h"
+#include "Constants.h"
 
 SpriteBank::SpriteBank() {
 }
@@ -17,22 +18,30 @@ void SpriteBank::reload() {
 }
 
 void SpriteBank::load() {
-	SDL_Texture* sprite = TextureManager::loadTexture("assets/GhostAvi.png");
-	SDL_Texture* box = TextureManager::loadTexture("assets/CollisionBox.png");
-	SDL_Texture* spy = TextureManager::loadTexture("assets/spyRotatable.png");
+	//find some way to eventually destroy these textures - combine them all into a spritesheet and make that a member of SpriteBank, destroy in clear()
+	sprite = TextureManager::loadTexture("assets/GhostAvi.png");
+	box = TextureManager::loadTexture("assets/CollisionBox.png");
+	spy = TextureManager::loadTexture("assets/spyRotatable.png");
+	crosshair = TextureManager::loadTexture("assets/crosshairs.png");
+	bullet = TextureManager::loadTexture("assets/bullet.png");
+	grass = TextureManager::loadTexture("assets/grass.png");
+	wall = TextureManager::loadTexture("assets/wall.png");
 
-	Player = new TextureRegion(sprite, 0, 0, 678, 673);
-	TestCollisionBox = new TextureRegion(box, 0, 0, 64, 64);
-	Spy = new TextureRegion(spy, 0, 0, 50, 68);
+	Player = TextureRegion(sprite, 0, 0, 678, 673);
+	TestCollisionBox = TextureRegion(box, 0, 0, 64, 64);
+	Spy = TextureRegion(spy, 0, 0, 50, 68);
+	Crosshair = TextureRegion(crosshair, 0, 0, 24, 24);
+	Bullet = TextureRegion(bullet, 0, 0, 3, 8);
+	Grass = TextureRegion(grass, 0, 0, TILE_PIXELSIZE, TILE_PIXELSIZE);
+	Wall = TextureRegion(wall, 0, 0, TILE_PIXELSIZE, TILE_PIXELSIZE);
 }
 
 void SpriteBank::clear() {
-	delete Player;
-	delete TestCollisionBox;
-	delete Spy;
-
-
-	Player = nullptr;
-	TestCollisionBox = nullptr;
-	Spy = nullptr;
+	SDL_DestroyTexture(sprite);
+	SDL_DestroyTexture(box);
+	SDL_DestroyTexture(spy);
+	SDL_DestroyTexture(crosshair);
+	SDL_DestroyTexture(bullet);
+	SDL_DestroyTexture(grass);
+	SDL_DestroyTexture(wall);
 }

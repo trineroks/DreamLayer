@@ -14,8 +14,22 @@ public:
 	void reload();
 	void clear();
 
-	TextureRegion* Player;
-	TextureRegion* TestCollisionBox;
-	TextureRegion* Spy;
+	TextureRegion Player;
+	TextureRegion TestCollisionBox;
+	TextureRegion Spy;
+	TextureRegion Crosshair;
+	TextureRegion Bullet;
+
+	TextureRegion Grass;
+	TextureRegion Wall;
+
+private:
+	SDL_Texture* sprite;
+	SDL_Texture* box;
+	SDL_Texture* spy;
+	SDL_Texture* crosshair;
+	SDL_Texture* bullet;
+	SDL_Texture* grass;
+	SDL_Texture* wall;
 };
 

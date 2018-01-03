@@ -38,6 +38,7 @@ public:
 	}
 
 	void drawDebugBox() {
-		TextureManager::drawResized(SpriteBank::Instance().TestCollisionBox, x, y, w, h);
+		if (w != 0 && h != 0)
+			TextureManager::drawResized(SpriteBank::Instance().TestCollisionBox, x, y, w, h);
 	}
 };

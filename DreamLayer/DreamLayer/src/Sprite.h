@@ -16,7 +16,9 @@ public:
 
 	PositionType posType = TOPLEFT;
 
-	Sprite(TextureRegion *texRegion);
+	Sprite(TextureRegion &texRegion);
+
+	Sprite();
 
 	void setPosition(int _x, int _y);
 	
@@ -51,6 +53,8 @@ public:
 	}
 
 private:
+	void drawUpdate();
+
 	int wdraw = 0;
 	int hdraw = 0;
 

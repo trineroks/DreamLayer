@@ -15,6 +15,7 @@
     <ClCompile Include="src\Vector2D.cpp" />
     <ClCompile Include="src\entity\AnimatedSpriteComponent.cpp" />
     <ClCompile Include="src\entity\EntityManager.cpp" />
+    <ClCompile Include="src\Terrain.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Game.h" />
@@ -36,5 +37,8 @@
     <ClInclude Include="src\Vector2D.h" />
     <ClInclude Include="src\entity\AnimatedSpriteComponent.h" />
     <ClInclude Include="src\entity\EntityManager.h" />
+    <ClInclude Include="src\Tile.h" />
+    <ClInclude Include="src\Font.h" />
+    <ClInclude Include="src\Terrain.h" />
   </ItemGroup>
 </Project>

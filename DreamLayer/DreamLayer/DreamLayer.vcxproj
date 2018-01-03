@@ -90,11 +90,11 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>C:\Users\letsg\Documents\VisualStudioProjects\DreamLayer\SDLLibraries\SDL2_image-2.0.2\include;C:\Users\letsg\Documents\VisualStudioProjects\DreamLayer\SDLLibraries\SDL2-2.0.7\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\letsg\Documents\VisualStudioProjects\DreamLayer\SDLLibraries\SDL2_ttf-2.0.14\include;C:\Users\letsg\Documents\VisualStudioProjects\DreamLayer\SDLLibraries\SDL2_image-2.0.2\include;C:\Users\letsg\Documents\VisualStudioProjects\DreamLayer\SDLLibraries\SDL2-2.0.7\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>C:\Users\letsg\Documents\VisualStudioProjects\DreamLayer\SDLLibraries\SDL2_image-2.0.2\lib\x86;C:\Users\letsg\Documents\VisualStudioProjects\DreamLayer\SDLLibraries\SDL2-2.0.7\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Users\letsg\Documents\VisualStudioProjects\DreamLayer\SDLLibraries\SDL2_ttf-2.0.14\lib\x86;C:\Users\letsg\Documents\VisualStudioProjects\DreamLayer\SDLLibraries\SDL2_image-2.0.2\lib\x86;C:\Users\letsg\Documents\VisualStudioProjects\DreamLayer\SDLLibraries\SDL2-2.0.7\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
     </Link>
   </ItemDefinitionGroup>
@@ -103,11 +103,11 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>C:\Users\letsg\Documents\VisualStudioProjects\DreamLayer\SDLLibraries\SDL2_image-2.0.2\include;C:\Users\letsg\Documents\VisualStudioProjects\DreamLayer\SDLLibraries\SDL2-2.0.7\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\letsg\Documents\VisualStudioProjects\DreamLayer\SDLLibraries\SDL2_ttf-2.0.14\include;C:\Users\letsg\Documents\VisualStudioProjects\DreamLayer\SDLLibraries\SDL2_image-2.0.2\include;C:\Users\letsg\Documents\VisualStudioProjects\DreamLayer\SDLLibraries\SDL2-2.0.7\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>C:\Users\letsg\Documents\VisualStudioProjects\DreamLayer\SDLLibraries\SDL2_image-2.0.2\lib\x86;C:\Users\letsg\Documents\VisualStudioProjects\DreamLayer\SDLLibraries\SDL2-2.0.7\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Users\letsg\Documents\VisualStudioProjects\DreamLayer\SDLLibraries\SDL2_ttf-2.0.14\lib\x86;C:\Users\letsg\Documents\VisualStudioProjects\DreamLayer\SDLLibraries\SDL2_image-2.0.2\lib\x86;C:\Users\letsg\Documents\VisualStudioProjects\DreamLayer\SDLLibraries\SDL2-2.0.7\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
     </Link>
   </ItemDefinitionGroup>
@@ -118,13 +118,13 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>C:\Users\letsg\Documents\VisualStudioProjects\DreamLayer\SDLLibraries\SDL2_image-2.0.2\include;C:\Users\letsg\Documents\VisualStudioProjects\DreamLayer\SDLLibraries\SDL2-2.0.7\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\letsg\Documents\VisualStudioProjects\DreamLayer\SDLLibraries\SDL2_ttf-2.0.14\include;C:\Users\letsg\Documents\VisualStudioProjects\DreamLayer\SDLLibraries\SDL2_image-2.0.2\include;C:\Users\letsg\Documents\VisualStudioProjects\DreamLayer\SDLLibraries\SDL2-2.0.7\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>C:\Users\letsg\Documents\VisualStudioProjects\DreamLayer\SDLLibraries\SDL2_image-2.0.2\lib\x86;C:\Users\letsg\Documents\VisualStudioProjects\DreamLayer\SDLLibraries\SDL2-2.0.7\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Users\letsg\Documents\VisualStudioProjects\DreamLayer\SDLLibraries\SDL2_ttf-2.0.14\lib\x86;C:\Users\letsg\Documents\VisualStudioProjects\DreamLayer\SDLLibraries\SDL2_image-2.0.2\lib\x86;C:\Users\letsg\Documents\VisualStudioProjects\DreamLayer\SDLLibraries\SDL2-2.0.7\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
     </Link>
   </ItemDefinitionGroup>
@@ -135,13 +135,13 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>C:\Users\letsg\Documents\VisualStudioProjects\DreamLayer\SDLLibraries\SDL2_image-2.0.2\include;C:\Users\letsg\Documents\VisualStudioProjects\DreamLayer\SDLLibraries\SDL2-2.0.7\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\letsg\Documents\VisualStudioProjects\DreamLayer\SDLLibraries\SDL2_ttf-2.0.14\include;C:\Users\letsg\Documents\VisualStudioProjects\DreamLayer\SDLLibraries\SDL2_image-2.0.2\include;C:\Users\letsg\Documents\VisualStudioProjects\DreamLayer\SDLLibraries\SDL2-2.0.7\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>C:\Users\letsg\Documents\VisualStudioProjects\DreamLayer\SDLLibraries\SDL2_image-2.0.2\lib\x86;C:\Users\letsg\Documents\VisualStudioProjects\DreamLayer\SDLLibraries\SDL2-2.0.7\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Users\letsg\Documents\VisualStudioProjects\DreamLayer\SDLLibraries\SDL2_ttf-2.0.14\lib\x86;C:\Users\letsg\Documents\VisualStudioProjects\DreamLayer\SDLLibraries\SDL2_image-2.0.2\lib\x86;C:\Users\letsg\Documents\VisualStudioProjects\DreamLayer\SDLLibraries\SDL2-2.0.7\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
     </Link>
   </ItemDefinitionGroup>
@@ -160,6 +160,7 @@
     <ClCompile Include="src\TextureManager.cpp" />
     <ClCompile Include="src\TextureRegion.cpp" />
     <ClCompile Include="src\Vector2D.cpp" />
+    <ClCompile Include="src\Terrain.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\entity\EntityManager.h" />
@@ -169,6 +170,7 @@
     <ClInclude Include="src\entity\Entity.h" />
     <ClInclude Include="src\entity\SpriteComponent.h" />
     <ClInclude Include="src\entity\TransformComponent.h" />
+    <ClInclude Include="src\Font.h" />
     <ClInclude Include="src\Map.h" />
     <ClInclude Include="src\Constants.h" />
     <ClInclude Include="src\Rect.h" />
@@ -180,7 +182,9 @@
     <ClInclude Include="src\stateMachine\StateMachine.h" />
     <ClInclude Include="src\TextureManager.h" />
     <ClInclude Include="src\TextureRegion.h" />
+    <ClInclude Include="src\Tile.h" />
     <ClInclude Include="src\Vector2D.h" />
+    <ClInclude Include="src\Terrain.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -10,7 +10,7 @@
 
 class Game {
 public:
-		struct Camera {
+	struct Camera {
 		int x;
 		int y;
 	};
@@ -29,8 +29,19 @@ public:
 	static SDL_Event event;
 	static Camera camera;
 
+	static int getScreenWidth() {
+		return wscreen;
+	}
+
+	static int getScreenHeight() {
+		return hscreen;
+	}
+
 private:
 	int counter = 0;
 	bool isRunning;
 	SDL_Window *window;
+
+	static int wscreen;
+	static int hscreen;
 };

@@ -1,10 +1,15 @@
 #include "Sprite.h"
+#include <stdio.h>
 
-Sprite::Sprite(TextureRegion *texRegion) {
-	region = texRegion;
+Sprite::Sprite(TextureRegion &texRegion) {
+	region = &texRegion;
 	setCollisionBox(Rect(0, 0, region->getRect().w, region->getRect().h));
 	wdraw = region->getRect().w;
 	hdraw = region->getRect().h;
+}
+
+Sprite::Sprite() {
+
 }
 
 Sprite::~Sprite() {
@@ -31,13 +36,18 @@ void Sprite::scaleSpriteAndCollisionBox(int w, int h) {
 }
 
 void Sprite::update() {
-	int xrect = x; 
+	x += deltx * SPEED;
+	y += delty * SPEED;
+}
+
+void Sprite::drawUpdate() {
+	int xrect = x;
 	int yrect = y;
 	switch (posType) {
-	case TOPLEFT: 
-		rect.setPos(xrect, yrect);
+	case TOPLEFT:
 		xdraw = (int)x;
 		ydraw = (int)y;
+		rect.setPos(xrect, yrect);
 		break;
 	case CENTER:
 		xrect = (int)x - (rect.w / 2);
@@ -66,12 +76,11 @@ void Sprite::update() {
 		ydraw = (int)y;
 		break;
 	}
-	x += deltx * SPEED;
-	y += delty * SPEED;
 }
 
 void Sprite::render() {
-	TextureManager::drawResized(region, xdraw, ydraw, wdraw, hdraw, angle, 25, 16);
+	drawUpdate();
+	TextureManager::drawResized(*region, xdraw, ydraw, wdraw, hdraw, angle, xoffset, yoffset);
 	if (drawDebug)
 		rect.drawDebugBox();
 }
