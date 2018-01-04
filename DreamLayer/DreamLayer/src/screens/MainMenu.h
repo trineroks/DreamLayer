@@ -39,6 +39,7 @@ private:
 	Rect* test;
 
 	void testAngleUpdate();
+	void bounceBullet(Sprite* bullet);
 
 	bool editing = false;
 

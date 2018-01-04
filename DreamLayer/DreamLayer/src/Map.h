@@ -16,7 +16,14 @@ public:
 	void generateCollisionMap();
 	void render();
 
-	void handleTerrainCollision(Sprite* sprite);
+	bool isCollidingPredict(Sprite* sprite);
+	bool isColliding(Sprite* sprite);
+
+	char isCollidingWithType(Sprite* sprite);
+
+	bool testCollideDirection(Sprite* sprite);
+
+	void clearMap();
 
 	void editTerrainAt(int _x, int _y, int tile);
 

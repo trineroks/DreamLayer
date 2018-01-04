@@ -25,6 +25,7 @@ void Terrain::setTile(unsigned char _tile) {
 	switch (tile) {
 	case Tile::grass:
 		texRegion = &SpriteBank::Instance().Grass;
+		obstacle = false;
 		break;
 	case Tile::wall:
 		texRegion = &SpriteBank::Instance().Wall;

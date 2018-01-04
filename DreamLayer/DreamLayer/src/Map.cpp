@@ -5,8 +5,8 @@
 
 
 Map::Map() {
-	w = 10;
-	h = 10;
+	w = 30;
+	h = 30;
 	terrainW = TILE_PIXELSIZE;
 	terrainH = TILE_PIXELSIZE;
 }
@@ -30,6 +30,15 @@ void Map::generate() {
 			terrain.setTile(Tile::grass);
 			terrain.setPosition(x, y);
 			terrains[(y * w) + x] = terrain;
+		}
+	}
+	generateCollisionMap();
+}
+
+void Map::clearMap() {
+	for (int y = 0; y < h; y++) {
+		for (int x = 0; x < w; x++) {
+			terrains[(y * w) + x].setTile(Tile::grass);
 		}
 	}
 	generateCollisionMap();
@@ -96,37 +105,75 @@ void Map::editTerrainAt(int _x, int _y, int tile) {
 	generateCollisionMap();
 }
 
-void Map::handleTerrainCollision(Sprite* sprite) {
-	int x = sprite->getRect().x;
-	int y = sprite->getRect().y;
-	int h = sprite->getRect().h;
-	int w = sprite->getRect().w;
-	//for (int i = 0; i < w * h; i++) {
-	//	if (sprite->deltx != 0 && sprite->delty != 0) {
-	//		if (terrains[i].getRect().intersects(Rect(x + SPEED, y + SPEED, w, h)) ||
-	//			terrains[i].getRect().intersects(Rect(x - SPEED, y - SPEED, w, h)) ||
-	//			terrains[i].getRect().intersects(Rect(x + SPEED, y - SPEED, w, h)) ||
-	//			terrains[i].getRect().intersects(Rect(x - SPEED, y + SPEED, w, h))) {
-	//			sprite->moveX = false;
-	//			sprite->moveY = false;
-	//			return;
-	//		}
-	//	}
-	//	if (sprite->deltx != 0) {
-	//		if (terrains[i].getRect().intersects(Rect(x + SPEED, y, w, h)) ||
-	//			terrains[i].getRect().intersects(Rect(x - SPEED, y, w, h))) {
-	//			sprite->moveX = false;
-	//			return;
-	//		}
-	//	}
-	//	if (sprite->delty != 0) {
-	//		if (terrains[i].getRect().intersects(Rect(x, y + SPEED, w, h)) ||
-	//			terrains[i].getRect().intersects(Rect(x, y - SPEED, w, h))) {
-	//			sprite->moveY = false;
-	//			return;
-	//		}
-	//	}
-	//}
+bool Map::isCollidingPredict(Sprite* sprite) {
+	Rect rx = sprite->getPredictiveX();
+	Rect ry = sprite->getPredictiveY();
+	bool ret = false;
+	for (int i = 0; i < collisionMap.size(); i++) {
+		if (collisionMap[i].intersects(rx)) {
+			//printf("Collision!!\n");
+			sprite->revertXPos();
+			ret = true;
+		}
+		if (collisionMap[i].intersects(ry)) {
+			//printf("Collision!!\n");
+			sprite->revertYPos();
+			ret = true;
+		}
+	}
+	//printf("\n");
+	return ret;
+}
+
+bool Map::testCollideDirection(Sprite* sprite) {
+	Rect r = sprite->getRect();
+	Rect col;
+	bool ret = false;
+	for (int i = 0; i < collisionMap.size(); i++) {
+		col = collisionMap[i];
+		if (col.collidedFromBot(r)) {
+			printf("Collided from Bottom!\n");
+			ret = true;
+		}
+		if (col.collidedFromTop(r)) {
+			printf("Collided from Top!\n");
+			ret = true;
+		}
+		if (col.collidedFromRight(r)) {
+			printf("Collided from Right!\n");
+			ret = true;
+		}
+		if (col.collidedFromLeft(r)) {
+			printf("Collided from Left!\n");
+			ret = true;
+		}
+	}
+	return ret;
+}
+
+bool Map::isColliding(Sprite* sprite) {
+	Rect r = sprite->getRect();
+	for (int i = 0; i < collisionMap.size(); i++) {
+		if (collisionMap[i].intersects(r))
+			return true;
+	}
+	return false;
+}
+
+char Map::isCollidingWithType(Sprite* sprite) {
+	Rect r = sprite->getRect();
+	char colType = CollisionType::NONE;
+	for (int i = 0; i < collisionMap.size(); i++) {
+		if (collisionMap[i].collidedFromBot(r) || collisionMap[i].collidedFromTop(r))
+			colType = CollisionType::HORIZONTAL;
+		if (collisionMap[i].collidedFromRight(r) || collisionMap[i].collidedFromLeft(r)) {
+			if (colType == CollisionType::HORIZONTAL)
+				colType = CollisionType::CORNER;
+			else 
+				colType = CollisionType::VERTICAL;
+		}
+	}
+	return colType;
 }
 
 void Map::render() {
@@ -134,8 +181,8 @@ void Map::render() {
 		terrains[i].render();
 	}
 	if (drawDebug) {
-		for (std::vector<Rect>::iterator i = collisionMap.begin(); i != collisionMap.end(); i++) {
-			i->drawDebugBox();
+		for (int i = 0; i < collisionMap.size(); i++) {
+			collisionMap[i].drawDebugBox();
 		}
 	}
 }

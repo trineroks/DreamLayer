@@ -51,24 +51,42 @@ void MainMenu::update(float deltaTime) {
 		crosshair.update();
 		currentTime = 0;
 		for (int i = bullets.size() - 1; i >= 0; i--) {
+			bounceBullet(&bullets[i]);
 			bullets[i].update();
 		}
 	}
-	map.handleTerrainCollision(&sprite);
+	map.isCollidingPredict(&sprite);
 	testAngleUpdate();
 	draw();
 }
 
+void MainMenu::bounceBullet(Sprite* bullet) {
+	if (map.isColliding(bullet)) {
+		bullet->revertPos();
+		char collType = map.isCollidingWithType(bullet);
+		if (collType == CollisionType::VERTICAL) {
+			bullet->delta.x *= -1;
+		}
+		else if (collType == CollisionType::HORIZONTAL) {
+			bullet->delta.y *= -1;
+		}
+		else if (collType == CollisionType::CORNER) {
+			bullet->delta.x *= -1;
+			bullet->delta.y *= -1;
+		}
+	}
+}
+
 void MainMenu::testAngleUpdate() {
-	float diffx = sprite.x - mousex;
-	float diffy = mousey - sprite.y;
+	float diffx = sprite.pos.x - mousex;
+	float diffy = mousey - sprite.pos.y;
 	float angle = atan(diffx / diffy) * (180 / PI);
 	if (diffy < 0) {
 		angle += 180;
 	}
 	sprite.angle = angle;
 	crosshair.setPosition(mousex, mousey);
-	//printf("Angle generated: %.4f. Diff x: %.4f and Diff y: %.4f\n", angle, diffx, diffy);
+	//printf("Angle generated: %.4f.\n", angle, diffx, diffy);
 }
 
 void MainMenu::draw() {
@@ -76,8 +94,8 @@ void MainMenu::draw() {
 	sprite.render();
 	crosshair.render();
 	for (int i = bullets.size() - 1; i >= 0; i--) {
-		if (bullets[i].x <= 0 || bullets[i].x >= 800 ||
-			bullets[i].y <= 0 || bullets[i].y >= 640) {
+		if (bullets[i].pos.x <= 0 || bullets[i].pos.x >= 800 ||
+			bullets[i].pos.y <= 0 || bullets[i].pos.y >= 640) {
 			bullets.erase(bullets.begin() + i);
 			printf("Bullet cleared\n");
 		}
@@ -89,19 +107,23 @@ void MainMenu::draw() {
 void MainMenu::keyUp(SDL_Keycode key) {
 	switch (key) {
 	case SDLK_w:
-		sprite.delty = 0;
+		sprite.delta.y = 0;
 		break;
 	case SDLK_s:
-		sprite.delty = 0;
+		sprite.delta.y = 0;
 		break;
 	case SDLK_d:
-		sprite.deltx = 0;
+		sprite.delta.x = 0;
 		break;
 	case SDLK_a:
-		sprite.deltx = 0;
+		sprite.delta.x = 0;
 		break;
 	case SDLK_q:
 		editing = false;
+		break;
+	case SDLK_e:
+		map.clearMap();
+		printf("Map cleared!\n");
 		break;
 	}
 }
@@ -109,20 +131,20 @@ void MainMenu::keyUp(SDL_Keycode key) {
 void MainMenu::keyDown(SDL_Keycode key) {
 	switch (key) {
 	case SDLK_w:
-		sprite.delty = -1;
+		sprite.delta.y = -1;
+		//printf("Keypress...");
 		break;
 	case SDLK_s:
-		sprite.delty = 1;
+		sprite.delta.y = 1;
 		break;
 	case SDLK_d:
-		sprite.deltx = 1;
+		sprite.delta.x = 1;
 		break;
 	case SDLK_a:
-		sprite.deltx = -1;
+		sprite.delta.x = -1;
 		break;
 	case SDLK_q:
 		editing = true;
-		printf("Keypress...");
 		break;
 	}
 }
@@ -139,12 +161,12 @@ void MainMenu::touchDown(int x, int y) {
 		bullet.collyOffset = 5;
 
 		float radian = (sprite.angle + 90.0f) * (PI / 180.0f);
-		float startposX = sprite.x + (52 * cos(radian));
-		float startposY = sprite.y + (52 * sin(radian));
+		float startposX = sprite.pos.x + (52 * cos(radian));
+		float startposY = sprite.pos.y + (52 * sin(radian));
 		bullet.setPosition((int)startposX, (int)startposY);
 
-		bullet.deltx = cos(radian) * 4;
-		bullet.delty = sin(radian) * 4;
+		bullet.delta.x = cos(radian) * 4;
+		bullet.delta.y = sin(radian) * 4;
 
 		bullets.push_back(std::move(bullet));
 	}
@@ -160,6 +182,9 @@ void MainMenu::touchUp(int x, int y) {
 void MainMenu::touchDragged(int x, int y) {
 	mousex = x;
 	mousey = y;
+	if (editing) {
+		map.editTerrainAt(x, y, Tile::wall);
+	}
 }
 
 void MainMenu::mouseMoved(int x, int y) {

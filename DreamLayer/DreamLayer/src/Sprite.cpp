@@ -16,8 +16,11 @@ Sprite::~Sprite() {
 }
 
 void Sprite::setPosition(int _x, int _y) {
-	x = _x;
-	y = _y;
+	prevPos.x = pos.x;
+	prevPos.y = pos.y;
+
+	pos.x = _x;
+	pos.y = _y;
 }
 
 void Sprite::setCollisionBox(Rect box) {
@@ -36,50 +39,61 @@ void Sprite::scaleSpriteAndCollisionBox(int w, int h) {
 }
 
 void Sprite::update() {
-	x += deltx * SPEED;
-	y += delty * SPEED;
-}
+	prevPos.x = pos.x;
+	prevPos.y = pos.y;
+	pos.x += delta.x * SPEED;
+	pos.y += delta.y * SPEED;
 
-void Sprite::drawUpdate() {
-	int xrect = x;
-	int yrect = y;
+	int xrect = pos.x;
+	int yrect = pos.y;
 	switch (posType) {
 	case TOPLEFT:
-		xdraw = (int)x;
-		ydraw = (int)y;
+		xdraw = (int)pos.x;
+		ydraw = (int)pos.y;
 		rect.setPos(xrect, yrect);
 		break;
 	case CENTER:
-		xrect = (int)x - (rect.w / 2);
-		yrect = (int)y - (rect.h / 2);
-		xdraw = (int)x - (wdraw / 2);
-		ydraw = (int)y - (hdraw / 2);
+		xrect = (int)pos.x - (rect.w / 2);
+		yrect = (int)pos.y - (rect.h / 2);
+		xdraw = (int)pos.x - (wdraw / 2);
+		ydraw = (int)pos.y - (hdraw / 2);
 		rect.setPos(xrect, yrect);
 		break;
 	case BOTTOMCENTER:
-		xrect = (int)x - (rect.w / 2);
-		yrect = (int)y - rect.h;
-		xdraw = (int)x - (wdraw / 2);
-		ydraw = (int)y - hdraw;
+		xrect = (int)pos.x - (rect.w / 2);
+		yrect = (int)pos.y - rect.h;
+		xdraw = (int)pos.x - (wdraw / 2);
+		ydraw = (int)pos.y - hdraw;
 		rect.setPos(xrect, yrect);
 		break;
 	case CUSTOM:
-		xrect = (int)x - xoffset + collxOffset;
-		yrect = (int)y - yoffset + collyOffset;
-		xdraw = (int)x - xoffset;
-		ydraw = (int)y - yoffset;
+		xrect = (int)pos.x - xoffset + collxOffset;
+		yrect = (int)pos.y - yoffset + collyOffset;
+		xdraw = (int)pos.x - xoffset;
+		ydraw = (int)pos.y - yoffset;
 		rect.setPos(xrect, yrect);
 		break;
 	default:
 		rect.setPos(xrect, yrect);
-		xdraw = (int)x;
-		ydraw = (int)y;
+		xdraw = (int)pos.x;
+		ydraw = (int)pos.y;
 		break;
 	}
 }
 
+Rect Sprite::getPredictiveX() {
+	Rect p = rect;
+	p.x = rect.x +(delta.x * SPEED);//(deltx * SPEED);
+	return p;
+}
+
+Rect Sprite::getPredictiveY() {
+	Rect p = rect;
+	p.y = rect.y +(delta.y * SPEED);//(delty * SPEED);
+	return p;
+}
+
 void Sprite::render() {
-	drawUpdate();
 	TextureManager::drawResized(*region, xdraw, ydraw, wdraw, hdraw, angle, xoffset, yoffset);
 	if (drawDebug)
 		rect.drawDebugBox();

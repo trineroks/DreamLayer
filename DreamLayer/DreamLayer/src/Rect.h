@@ -10,6 +10,9 @@ public:
 	int w = 0;
 	int h = 0;
 
+	int prevx = 0;
+	int prevy = 0;
+
 	Rect() {}
 
 	Rect(int _x, int _y, int _w, int _h) {
@@ -17,9 +20,13 @@ public:
 		y = _y;
 		w = _w;
 		h = _h;
+		prevx = x;
+		prevy = y;
 	}
 
 	void setPos(int _x, int _y) {
+		prevx = x;
+		prevy = y;
 		x = _x;
 		y = _y;
 	}
@@ -35,6 +42,30 @@ public:
 
 	bool intersects(const Rect &culprit) {
 		return !(culprit.x > x + w || culprit.y > y + h || culprit.x + culprit.w < x || culprit.y + culprit.h < y);
+	}
+
+	bool collidedFromLeft(const Rect &culprit) {
+		if (intersects(culprit))
+			return (culprit.prevx + culprit.w < x && culprit.x + culprit.w >= x);
+		return false;
+	}
+
+	bool collidedFromRight(const Rect &culprit) {
+		if (intersects(culprit))
+			return (culprit.prevx > x + w && culprit.x <= x + w);
+		return false;
+	}
+
+	bool collidedFromTop(const Rect &culprit) {
+		if (intersects(culprit))
+			return (culprit.prevy + culprit.h < y && culprit.y + culprit.h >= y);
+		return false;
+	}
+
+	bool collidedFromBot(const Rect &culprit) {
+		if (intersects(culprit))
+			return (culprit.prevy > y + h && culprit.y <= y + h);
+		return false;
 	}
 
 	void drawDebugBox() {
