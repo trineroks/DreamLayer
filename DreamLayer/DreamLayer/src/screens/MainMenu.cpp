@@ -65,12 +65,16 @@ void MainMenu::bounceBullet(Sprite* bullet) {
 		bullet->revertPos();
 		char collType = map.isCollidingWithType(bullet);
 		if (collType == CollisionType::VERTICAL) {
+			bullet->angle *= -1;
 			bullet->delta.x *= -1;
 		}
 		else if (collType == CollisionType::HORIZONTAL) {
+			bullet->angle *= -1;
+			bullet->angle -= 180;
 			bullet->delta.y *= -1;
 		}
 		else if (collType == CollisionType::CORNER) {
+			bullet->angle += 180;
 			bullet->delta.x *= -1;
 			bullet->delta.y *= -1;
 		}
@@ -86,7 +90,6 @@ void MainMenu::testAngleUpdate() {
 	}
 	sprite.angle = angle;
 	crosshair.setPosition(mousex, mousey);
-	//printf("Angle generated: %.4f.\n", angle, diffx, diffy);
 }
 
 void MainMenu::draw() {
@@ -132,7 +135,6 @@ void MainMenu::keyDown(SDL_Keycode key) {
 	switch (key) {
 	case SDLK_w:
 		sprite.delta.y = -1;
-		//printf("Keypress...");
 		break;
 	case SDLK_s:
 		sprite.delta.y = 1;
@@ -165,8 +167,8 @@ void MainMenu::touchDown(int x, int y) {
 		float startposY = sprite.pos.y + (52 * sin(radian));
 		bullet.setPosition((int)startposX, (int)startposY);
 
-		bullet.delta.x = cos(radian) * 4;
-		bullet.delta.y = sin(radian) * 4;
+		bullet.delta.x = cos(radian) * 5;
+		bullet.delta.y = sin(radian) * 5;
 
 		bullets.push_back(std::move(bullet));
 	}
