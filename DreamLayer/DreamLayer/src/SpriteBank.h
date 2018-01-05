@@ -17,6 +17,7 @@ public:
 	TextureRegion Player;
 	TextureRegion TestCollisionBox;
 	TextureRegion Spy;
+	TextureRegion SpyHolstered;
 	TextureRegion Crosshair;
 	TextureRegion Bullet;
 
@@ -31,5 +32,6 @@ private:
 	SDL_Texture* bullet;
 	SDL_Texture* grass;
 	SDL_Texture* wall;
+	SDL_Texture* spyHolstered;
 };
 

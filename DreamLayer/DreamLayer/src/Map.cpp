@@ -14,7 +14,7 @@ Map::Map() {
 Map::~Map() {
 }
 
-Terrain* Map::getTerrainAt(int _x, int _y) {
+Terrain* Map::getTerrainAt(int _x, int _y){
 	int x = (_x + terrainW/2) / terrainW;
 	int y = (_y + terrainH/2) / terrainH;
 	int index = (y * w) + x;

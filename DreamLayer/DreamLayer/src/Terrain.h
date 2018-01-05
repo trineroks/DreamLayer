@@ -29,7 +29,7 @@ public:
 
 	void setTile(unsigned char _tile);
 
-	unsigned char getTile() {
+	const unsigned char getTile() const {
 		return tile;
 	}
 	

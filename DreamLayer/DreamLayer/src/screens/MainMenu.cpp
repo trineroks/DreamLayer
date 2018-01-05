@@ -18,17 +18,14 @@ void MainMenu::cleanUp() {
 }
 
 void MainMenu::init() {
-	sprite = Sprite(SpriteBank::Instance().Spy);
+	sprite = Character(SpriteBank::Instance().Spy, SpriteBank::Instance().SpyHolstered);
 	sprite.setCollisionBox(Rect(0,0,32, 32));
 	sprite.drawDebug = true;
-	sprite.posType = sprite.CUSTOM;
-	sprite.xoffset = 25;
-	sprite.yoffset = 16;
-	sprite.collxOffset = 9;
+	sprite.setCustomOrientationType(25, 16, 9, 0);
 	sprite.setPosition(300, 300);
 
 	crosshair = Sprite(SpriteBank::Instance().Crosshair);
-	crosshair.posType = crosshair.CENTER;
+	crosshair.setOrientationType(crosshair.CENTER);
 
 	SDL_ShowCursor(SDL_DISABLE);
 
@@ -47,7 +44,7 @@ void MainMenu::resume() {
 void MainMenu::update(float deltaTime) {
 	currentTime += deltaTime;
 	if (currentTime >= FRAMEDELAY) {
-		sprite.update();
+		sprite.update(&map);
 		crosshair.update();
 		currentTime = 0;
 		for (int i = bullets.size() - 1; i >= 0; i--) {
@@ -157,18 +154,15 @@ void MainMenu::touchDown(int x, int y) {
 		bullet.angle = sprite.angle;
 		bullet.setCollisionBox(Rect(0, 0, 3, 3));
 		bullet.drawDebug = true;
-		bullet.posType = bullet.CUSTOM;
-		bullet.xoffset = 2;
-		bullet.yoffset = 7;
-		bullet.collyOffset = 5;
+		bullet.setCustomOrientationType(2, 7, 0, 5);
 
 		float radian = (sprite.angle + 90.0f) * (PI / 180.0f);
 		float startposX = sprite.pos.x + (52 * cos(radian));
 		float startposY = sprite.pos.y + (52 * sin(radian));
 		bullet.setPosition((int)startposX, (int)startposY);
 
-		bullet.delta.x = cos(radian) * 5;
-		bullet.delta.y = sin(radian) * 5;
+		bullet.delta.x = cos(radian) * 7;
+		bullet.delta.y = sin(radian) * 7;
 
 		bullets.push_back(std::move(bullet));
 	}

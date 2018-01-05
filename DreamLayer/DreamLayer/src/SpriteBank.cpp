@@ -26,10 +26,12 @@ void SpriteBank::load() {
 	bullet = TextureManager::loadTexture("assets/bullet.png");
 	grass = TextureManager::loadTexture("assets/grass.png");
 	wall = TextureManager::loadTexture("assets/wall.png");
+	spyHolstered = TextureManager::loadTexture("assets/spyRotatableHolstered.png");
 
 	Player = TextureRegion(sprite, 0, 0, 678, 673);
 	TestCollisionBox = TextureRegion(box, 0, 0, 64, 64);
 	Spy = TextureRegion(spy, 0, 0, 50, 68);
+	SpyHolstered = TextureRegion(spyHolstered, 0, 0, 50, 45);
 	Crosshair = TextureRegion(crosshair, 0, 0, 24, 24);
 	Bullet = TextureRegion(bullet, 0, 0, 3, 8);
 	Grass = TextureRegion(grass, 0, 0, TILE_PIXELSIZE, TILE_PIXELSIZE);
@@ -40,6 +42,7 @@ void SpriteBank::clear() {
 	SDL_DestroyTexture(sprite);
 	SDL_DestroyTexture(box);
 	SDL_DestroyTexture(spy);
+	SDL_DestroyTexture(spyHolstered);
 	SDL_DestroyTexture(crosshair);
 	SDL_DestroyTexture(bullet);
 	SDL_DestroyTexture(grass);

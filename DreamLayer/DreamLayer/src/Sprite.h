@@ -12,10 +12,7 @@ public:
 		TOPLEFT = 0,
 		CENTER,
 		BOTTOMCENTER,
-		CUSTOM
 	}PositionType;
-
-	PositionType posType = TOPLEFT;
 
 	Sprite(TextureRegion &texRegion);
 
@@ -24,23 +21,26 @@ public:
 	void setPosition(int _x, int _y);
 	
 	void setCollisionBox(Rect rect);
+	void setTextureRegion(TextureRegion &tex);
 
 	void scaleSprite(int w, int h);
 	void scaleSpriteAndCollisionBox(int w, int h);
 
-	void update();
+	virtual void update();
 	void render();
 
 	Rect getPredictiveX();
 	Rect getPredictiveY();
 
 	~Sprite();
-	
-	int xoffset = 0;
-	int yoffset = 0;
 
-	int collxOffset = 0;
-	int collyOffset = 0;
+	/*Custom Orientation Type. From your texture (in pixels), define the point within the texture using x and y 
+	that will serve as the center/rotating point. Collision offsets define where in the point the collision box will
+	be created. Top left serves as (0,0). For example, a 30(w)x50(h) sprite with a centerpoint at (15,15) with a collision 
+	box of 30x30 from the top right will use: (15, 15, 0, 0)
+	*/
+	void setCustomOrientationType(int _xoffset, int _yoffset, int _collxOffset, int _collyOffset);
+	void setOrientationType(PositionType type);
 
 	Vector2D pos = Vector2D(0, 0);
 
@@ -69,7 +69,13 @@ public:
 		pos.y = prevPos.y;
 	}
 
-private:
+protected:
+	int xoffset = 0;
+	int yoffset = 0;
+
+	int collxOffset = 0;
+	int collyOffset = 0;
+
 	int wdraw = 0;
 	int hdraw = 0;
 

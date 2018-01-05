@@ -16,6 +16,7 @@
     <ClCompile Include="src\entity\AnimatedSpriteComponent.cpp" />
     <ClCompile Include="src\entity\EntityManager.cpp" />
     <ClCompile Include="src\Terrain.cpp" />
+    <ClCompile Include="src\Character.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Game.h" />
@@ -40,5 +41,6 @@
     <ClInclude Include="src\Tile.h" />
     <ClInclude Include="src\Font.h" />
     <ClInclude Include="src\Terrain.h" />
+    <ClInclude Include="src\Character.h" />
   </ItemGroup>
 </Project>

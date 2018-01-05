@@ -26,12 +26,13 @@ public:
 	void clearMap();
 
 	void editTerrainAt(int _x, int _y, int tile);
+	Terrain* getTerrainAt(int _x, int _y);
 
 	bool drawDebug = false;
 private:
 	bool rowIsObstacle(int x, int y, int length, std::bitset<MAX_MAP_DIMENSION>* bset);
 	//Using pixel coordinates, return the terrain at this specified area.
-	Terrain* getTerrainAt(int _x, int _y);
+	
 
 	Terrain terrains[MAX_MAP_DIMENSION];
 	std::vector<Rect> collisionMap;

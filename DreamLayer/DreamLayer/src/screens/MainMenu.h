@@ -1,6 +1,7 @@
 #pragma once
 #include "GameScreen.h"
 #include "../Sprite.h"
+#include "../Character.h"
 #include "../SpriteBank.h"
 #include "../Rect.h"
 #include "../Constants.h"
@@ -31,7 +32,7 @@ public:
 private:
 	std::vector<Sprite> bullets;
 
-	Sprite sprite;
+	Character sprite;
 	Sprite nonControlled;
 	Sprite crosshair;
 	Map map;

@@ -27,6 +27,12 @@ void Sprite::setCollisionBox(Rect box) {
 	rect = box;
 }
 
+void Sprite::setTextureRegion(TextureRegion &tex) {
+	region = &tex;
+	wdraw = region->getRect().w;
+	hdraw = region->getRect().h;
+}
+
 void Sprite::scaleSprite(int w, int h) {
 	wdraw = w;
 	hdraw = h;
@@ -38,47 +44,51 @@ void Sprite::scaleSpriteAndCollisionBox(int w, int h) {
 	setCollisionBox(Rect(0, 0, wdraw, hdraw));
 }
 
+void Sprite::setCustomOrientationType(int _xoffset, int _yoffset, int _collxOffset, int _collyOffset) {
+	xoffset = _xoffset;
+	yoffset = _yoffset;;
+	collxOffset = _xoffset - _collxOffset;
+	collyOffset = _yoffset - _collyOffset;
+}
+
+void Sprite::setOrientationType(PositionType type) {
+	switch (type) {
+	case TOPLEFT:
+		xoffset = 0;
+		yoffset = 0;
+		collxOffset = 0;
+		collyOffset = 0;
+		break;
+	case CENTER:
+		xoffset = wdraw / 2;
+		yoffset = hdraw / 2;;
+		collxOffset = rect.w / 2;
+		collyOffset = rect.h / 2;
+		break;
+	case BOTTOMCENTER:
+		xoffset = wdraw / 2;
+		yoffset = hdraw;;
+		collxOffset = rect.w / 2;
+		collyOffset = rect.h;
+		break;
+	default:
+		xoffset = 0;
+		yoffset = 0;
+		collxOffset = 0;
+		collyOffset = 0;
+		break;
+	}
+}
+
 void Sprite::update() {
 	prevPos.x = pos.x;
 	prevPos.y = pos.y;
 	pos.x += delta.x * SPEED;
 	pos.y += delta.y * SPEED;
 
-	int xrect = pos.x;
-	int yrect = pos.y;
-	switch (posType) {
-	case TOPLEFT:
-		xdraw = (int)pos.x;
-		ydraw = (int)pos.y;
-		rect.setPos(xrect, yrect);
-		break;
-	case CENTER:
-		xrect = (int)pos.x - (rect.w / 2);
-		yrect = (int)pos.y - (rect.h / 2);
-		xdraw = (int)pos.x - (wdraw / 2);
-		ydraw = (int)pos.y - (hdraw / 2);
-		rect.setPos(xrect, yrect);
-		break;
-	case BOTTOMCENTER:
-		xrect = (int)pos.x - (rect.w / 2);
-		yrect = (int)pos.y - rect.h;
-		xdraw = (int)pos.x - (wdraw / 2);
-		ydraw = (int)pos.y - hdraw;
-		rect.setPos(xrect, yrect);
-		break;
-	case CUSTOM:
-		xrect = (int)pos.x - xoffset + collxOffset;
-		yrect = (int)pos.y - yoffset + collyOffset;
-		xdraw = (int)pos.x - xoffset;
-		ydraw = (int)pos.y - yoffset;
-		rect.setPos(xrect, yrect);
-		break;
-	default:
-		rect.setPos(xrect, yrect);
-		xdraw = (int)pos.x;
-		ydraw = (int)pos.y;
-		break;
-	}
+	xdraw = (int)pos.x - xoffset;
+	ydraw = (int)pos.y - yoffset;
+	rect.setPos((int)pos.x - collxOffset, (int)pos.y - collyOffset);
 }
 
 Rect Sprite::getPredictiveX() {
@@ -94,7 +104,8 @@ Rect Sprite::getPredictiveY() {
 }
 
 void Sprite::render() {
-	TextureManager::drawResized(*region, xdraw, ydraw, wdraw, hdraw, angle, xoffset, yoffset);
+	if (region)
+		TextureManager::drawResized(*region, xdraw, ydraw, wdraw, hdraw, angle, xoffset, yoffset);
 	if (drawDebug)
 		rect.drawDebugBox();
 }
