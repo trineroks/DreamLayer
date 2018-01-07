@@ -10,7 +10,13 @@ public:
 
 	void updateHolstered(Map *map);
 	void update(Map *map);
+
+	bool getHolstered() {
+		return holstered;
+	}
+
 private:
+	bool holstered = false;
 	TextureRegion *holster;
 	TextureRegion *primary;
 	Rect holsterBox;

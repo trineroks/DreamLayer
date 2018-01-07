@@ -46,5 +46,8 @@ private:
 
 	int mousex = 0;
 	int mousey = 0;
+
+	int mouseWindowx = 0;
+	int mouseWindowy = 0;
 };
 

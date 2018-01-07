@@ -18,18 +18,23 @@ void MainMenu::cleanUp() {
 }
 
 void MainMenu::init() {
+	Game::setScaleW(0.8f);
+	Game::setScaleH(0.8f);
+
 	sprite = Character(SpriteBank::Instance().Spy, SpriteBank::Instance().SpyHolstered);
 	sprite.setCollisionBox(Rect(0,0,32, 32));
 	sprite.drawDebug = true;
 	sprite.setCustomOrientationType(25, 16, 9, 0);
 	sprite.setPosition(300, 300);
+	sprite.scale(Game::getScaleW(), Game::getScaleH());
 
 	crosshair = Sprite(SpriteBank::Instance().Crosshair);
 	crosshair.setOrientationType(crosshair.CENTER);
 
-	SDL_ShowCursor(SDL_DISABLE);
+	//SDL_ShowCursor(SDL_DISABLE);
 
 	map.generate();
+	map.scale(Game::getScaleW(), Game::getScaleH());
 	map.drawDebug = true;
 }
 
@@ -44,6 +49,7 @@ void MainMenu::resume() {
 void MainMenu::update(float deltaTime) {
 	currentTime += deltaTime;
 	if (currentTime >= FRAMEDELAY) {
+		Game::camera.update();
 		sprite.update(&map);
 		crosshair.update();
 		currentTime = 0;
@@ -118,6 +124,18 @@ void MainMenu::keyUp(SDL_Keycode key) {
 	case SDLK_a:
 		sprite.delta.x = 0;
 		break;
+	case SDLK_UP:
+		Game::camera.delta.y = 0;
+		break;
+	case SDLK_DOWN:
+		Game::camera.delta.y = 0;
+		break;
+	case SDLK_LEFT:
+		Game::camera.delta.x = 0;
+		break;
+	case SDLK_RIGHT:
+		Game::camera.delta.x = 0;
+		break;
 	case SDLK_q:
 		editing = false;
 		break;
@@ -142,6 +160,18 @@ void MainMenu::keyDown(SDL_Keycode key) {
 	case SDLK_a:
 		sprite.delta.x = -1;
 		break;
+	case SDLK_UP:
+		Game::camera.delta.y = -1 * 5;
+		break;
+	case SDLK_DOWN:
+		Game::camera.delta.y = 1 * 5;
+		break;
+	case SDLK_RIGHT:
+		Game::camera.delta.x = 1 * 5;
+		break;
+	case SDLK_LEFT:
+		Game::camera.delta.x = -1 * 5;
+		break;
 	case SDLK_q:
 		editing = true;
 		break;
@@ -149,7 +179,10 @@ void MainMenu::keyDown(SDL_Keycode key) {
 }
 
 void MainMenu::touchDown(int x, int y) {
-	if (!editing) {
+	if (editing) {
+		map.editTerrainAt(x, y, Tile::wall);
+	}
+	else if (!sprite.getHolstered()) {
 		Sprite bullet = Sprite(SpriteBank::Instance().Bullet);
 		bullet.angle = sprite.angle;
 		bullet.setCollisionBox(Rect(0, 0, 3, 3));
@@ -161,13 +194,11 @@ void MainMenu::touchDown(int x, int y) {
 		float startposY = sprite.pos.y + (52 * sin(radian));
 		bullet.setPosition((int)startposX, (int)startposY);
 
-		bullet.delta.x = cos(radian) * 7;
-		bullet.delta.y = sin(radian) * 7;
+		bullet.delta.x = cos(radian) * 7 * Game::getScaleW();
+		bullet.delta.y = sin(radian) * 7 * Game::getScaleH();
+		bullet.scale(Game::getScaleW(), Game::getScaleH());
 
 		bullets.push_back(std::move(bullet));
-	}
-	else {
-		map.editTerrainAt(x, y, Tile::wall);
 	}
 }
 
@@ -178,6 +209,7 @@ void MainMenu::touchUp(int x, int y) {
 void MainMenu::touchDragged(int x, int y) {
 	mousex = x;
 	mousey = y;
+
 	if (editing) {
 		map.editTerrainAt(x, y, Tile::wall);
 	}

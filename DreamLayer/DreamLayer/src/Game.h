@@ -3,18 +3,36 @@
 #include "SDL.h"
 #include "SDL_image.h"
 #include "SpriteBank.h"
+#include "Vector2D.h"
 
 #include "stateMachine/StateMachine.h"
 
 #include <stdio.h>
 
+class Camera {
+public:
+	Vector2D pos = Vector2D(0, 0);
+	Vector2D delta = Vector2D(0, 0);
+
+	void update() {
+		pos += delta;
+	}
+
+	void resetPosition() {
+		pos.x = 0;
+		pos.y = 0;
+	}
+
+	void reset() {
+		pos.x = 0;
+		pos.y = 0;
+		delta.x = 0;
+		delta.y = 0;
+	}
+};
+
 class Game {
 public:
-	struct Camera {
-		int x;
-		int y;
-	};
-
 	Game();
 	~Game();
 
@@ -37,6 +55,22 @@ public:
 		return hscreen;
 	}
 
+	static float getScaleW() {
+		return wscale;
+	}
+
+	static float getScaleH() {
+		return hscale;
+	}
+
+	static void setScaleW(float s) {
+		wscale = s;
+	}
+
+	static void setScaleH(float s) {
+		hscale = s;
+	}
+
 private:
 	int counter = 0;
 	bool isRunning;
@@ -44,4 +78,6 @@ private:
 
 	static int wscreen;
 	static int hscreen;
+	static float wscale;
+	static float hscale;
 };

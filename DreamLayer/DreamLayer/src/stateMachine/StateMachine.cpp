@@ -1,4 +1,5 @@
 #include "StateMachine.h"
+#include "../Game.h"
 
 StateMachine::StateMachine() {
 	exit = false;
@@ -52,21 +53,21 @@ void StateMachine::processInput() {
 			break;
 		case SDL_MOUSEBUTTONDOWN:
 			if (event.button.button == SDL_BUTTON_LEFT) {
-				screen->touchDown(event.button.x, event.button.y);
+				screen->touchDown(event.button.x + Game::camera.pos.x, event.button.y + Game::camera.pos.y);
 				clicked = true;
 			}
 			break;
 		case SDL_MOUSEBUTTONUP:
 			if (event.button.button == SDL_BUTTON_LEFT) {
-				screen->touchUp(event.button.x, event.button.y);
+				screen->touchUp(event.button.x + Game::camera.pos.x, event.button.y + Game::camera.pos.y);
 				clicked = false;
 			}
 			break;
 		case SDL_MOUSEMOTION:
 			if (clicked)
-				screen->touchDragged(event.motion.x, event.motion.y);
+				screen->touchDragged(event.button.x + Game::camera.pos.x, event.button.y + Game::camera.pos.y);
 			else 
-				screen->mouseMoved(event.motion.x, event.motion.y);
+				screen->mouseMoved(event.button.x + Game::camera.pos.x, event.button.y + Game::camera.pos.y);
 			break;
 		case SDL_QUIT:
 			exit = true;

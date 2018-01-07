@@ -12,6 +12,8 @@ public:
 	Map();
 	~Map();
 
+	void scale(float w, float h);
+
 	void generate();
 	void generateCollisionMap();
 	void render();

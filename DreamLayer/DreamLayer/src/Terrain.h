@@ -9,6 +9,9 @@ public:
 	Terrain(short _w, short _h);
 	~Terrain();
 
+	//Position is always oriented center for terrains, 
+	//Parameters - the 2D array position. Will be converted
+	//to pixel position within the function.
 	void setPosition(int _x, int _y);
 
 	int getX() {

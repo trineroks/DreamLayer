@@ -23,8 +23,8 @@ public:
 	void setCollisionBox(Rect rect);
 	void setTextureRegion(TextureRegion &tex);
 
-	void scaleSprite(int w, int h);
-	void scaleSpriteAndCollisionBox(int w, int h);
+	void scaleSprite(float w, float h);
+	void scale(float w, float h);
 
 	virtual void update();
 	void render();
@@ -70,6 +70,9 @@ public:
 	}
 
 protected:
+	float wscale = 0.0f;
+	float hscale = 0.0f;
+
 	int xoffset = 0;
 	int yoffset = 0;
 

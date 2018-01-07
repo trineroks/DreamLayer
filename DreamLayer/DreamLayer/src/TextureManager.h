@@ -11,5 +11,6 @@ public:
 	static void drawResized(TextureRegion textRegion, int x, int y, int w, int h);
 	static void drawResized(TextureRegion textRegion, int x, int y, int w, int h, double degrees, int rotatex, int rotatey);
 	static void drawResized(TextureRegion textRegion, int x, int y, int w, int h, double degrees, int rotatex, int rotatey, SDL_RendererFlip flip);
+	static void drawResizedStatic(TextureRegion textRegion, int x, int y, int w, int h, double degrees, int rotatex, int rotatey, SDL_RendererFlip flip);
 };
 

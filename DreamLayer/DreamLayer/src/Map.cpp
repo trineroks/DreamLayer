@@ -14,6 +14,12 @@ Map::Map() {
 Map::~Map() {
 }
 
+void Map::scale(float w, float h) {
+	terrainW *= w;
+	terrainH *= h;
+	generate();
+}
+
 Terrain* Map::getTerrainAt(int _x, int _y){
 	int x = (_x + terrainW/2) / terrainW;
 	int y = (_y + terrainH/2) / terrainH;
@@ -70,7 +76,7 @@ void Map::generateCollisionMap() {
 					dx++;
 					xlen++;
 				}
-				collw = terrainW * xlen;;
+				collw = terrainW * xlen;
 				int dy = y + 1;
 				ylen = 1;
 				while (dy < h && rowIsObstacle(x, dy, xlen, &visited)) {

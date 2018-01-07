@@ -29,19 +29,28 @@ void Sprite::setCollisionBox(Rect box) {
 
 void Sprite::setTextureRegion(TextureRegion &tex) {
 	region = &tex;
-	wdraw = region->getRect().w;
-	hdraw = region->getRect().h;
+	wdraw = region->getRect().w * wscale;
+	hdraw = region->getRect().h * hscale;
 }
 
-void Sprite::scaleSprite(int w, int h) {
-	wdraw = w;
-	hdraw = h;
+void Sprite::scaleSprite(float w, float h) {
+	wdraw *= w;
+	hdraw *= h;
 }
 
-void Sprite::scaleSpriteAndCollisionBox(int w, int h) {
-	wdraw = w;
-	hdraw = h;
-	setCollisionBox(Rect(0, 0, wdraw, hdraw));
+void Sprite::scale(float w, float h) {
+	wdraw *= w;
+	hdraw *= h;
+	rect.w *= w;
+	rect.h *= h;
+
+	xoffset *= w;
+	yoffset *= h;
+	collxOffset *= w;
+	collyOffset *= h;
+
+	wscale = w;
+	hscale = h;
 }
 
 void Sprite::setCustomOrientationType(int _xoffset, int _yoffset, int _collxOffset, int _collyOffset) {

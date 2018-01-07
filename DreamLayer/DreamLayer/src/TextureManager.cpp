@@ -36,6 +36,12 @@ void TextureManager::drawResized(TextureRegion textRegion, int x, int y, int w, 
 }
 
 void TextureManager::drawResized(TextureRegion textRegion, int x, int y, int w, int h, double degrees, int rotatex, int rotatey, SDL_RendererFlip flip) {
+	SDL_Rect dest = { x - Game::camera.pos.x, y - Game::camera.pos.y, w, h };
+	SDL_Point point = { rotatex, rotatey };
+	SDL_RenderCopyEx(Game::renderer, textRegion.getTexture(), &textRegion.getRect(), &dest, degrees, &point, flip);
+}
+
+void TextureManager::drawResizedStatic(TextureRegion textRegion, int x, int y, int w, int h, double degrees, int rotatex, int rotatey, SDL_RendererFlip flip) {
 	SDL_Rect dest = { x, y, w, h };
 	SDL_Point point = { rotatex, rotatey };
 	SDL_RenderCopyEx(Game::renderer, textRegion.getTexture(), &textRegion.getRect(), &dest, degrees, &point, flip);

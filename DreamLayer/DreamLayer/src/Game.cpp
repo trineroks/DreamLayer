@@ -4,9 +4,11 @@
 
 SDL_Renderer* Game::renderer = nullptr;
 SDL_Event Game::event;
-Game::Camera Game::camera;
+Camera Game::camera;
 int Game::wscreen;
 int Game::hscreen;
+float Game::wscale = 1.0f;
+float Game::hscale = 1.0f;
 
 Game::Game() {
 
@@ -19,9 +21,6 @@ Game::~Game() {
 void Game::init(const char *title, int x, int y, int width, int height, bool fullscreen) {
 
 	int flags = fullscreen ? (SDL_WINDOW_SHOWN | SDL_WINDOW_FULLSCREEN) : SDL_WINDOW_SHOWN;
-	
-	camera.x = 0;
-	camera.y = 0;
 	
 	wscreen = width;
 	hscreen = height;
