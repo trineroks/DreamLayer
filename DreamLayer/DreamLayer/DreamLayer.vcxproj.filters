@@ -17,6 +17,8 @@
     <ClCompile Include="src\entity\EntityManager.cpp" />
     <ClCompile Include="src\Terrain.cpp" />
     <ClCompile Include="src\Character.cpp" />
+    <ClCompile Include="src\Drawable.cpp" />
+    <ClCompile Include="src\ShadowCast.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Game.h" />
@@ -42,5 +44,7 @@
     <ClInclude Include="src\Font.h" />
     <ClInclude Include="src\Terrain.h" />
     <ClInclude Include="src\Character.h" />
+    <ClInclude Include="src\Drawable.h" />
+    <ClInclude Include="src\ShadowCast.h" />
   </ItemGroup>
 </Project>

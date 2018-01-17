@@ -10,6 +10,7 @@ const static float PI = 3.14159265;
 const static int MAX_MAP_DIMENSION = 256 * 256;
 
 const static int TILE_PIXELSIZE = 64;
+const static int TILE_RENDERSIZE = 32;
 
 namespace CollisionType {
 	const char NONE = 0;
@@ -17,3 +18,19 @@ namespace CollisionType {
 	const char HORIZONTAL = 2;
 	const char CORNER = 3;
 }
+
+class Point {
+public:
+	Point& operator=(const Point &p) {
+		this->x = p.x;
+		this->y = p.y;
+
+		return *this;
+	}
+
+	Point(int _x, int _y) : x(_x), y(_y) {}
+	Point() {}
+
+	int x = -1;
+	int y = -1;
+};

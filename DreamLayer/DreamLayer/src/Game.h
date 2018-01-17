@@ -71,6 +71,11 @@ public:
 		hscale = s;
 	}
 
+	static void modifyScale(float s) {
+		wscale += s;
+		hscale += s;
+	}
+
 private:
 	int counter = 0;
 	bool isRunning;

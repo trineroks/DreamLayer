@@ -3,38 +3,73 @@
 #include "SpriteBank.h"
 #include "Constants.h"
 
-
 Map::Map() {
-	w = 30;
-	h = 30;
-	terrainW = TILE_PIXELSIZE;
-	terrainH = TILE_PIXELSIZE;
+	w = 60;
+	h = 60;
+	terrainW = TILE_RENDERSIZE;
+	terrainH = TILE_RENDERSIZE;
+
+	shadowEngine.setMap(*this);
+
+	grass = &SpriteBank::Instance().Grass;
+	wall = &SpriteBank::Instance().Wall;
+	fog = &SpriteBank::Instance().Fog;
 }
 
 Map::~Map() {
 }
 
-void Map::scale(float w, float h) {
-	terrainW *= w;
-	terrainH *= h;
-	generate();
-}
-
-Terrain* Map::getTerrainAt(int _x, int _y){
-	int x = (_x + terrainW/2) / terrainW;
-	int y = (_y + terrainH/2) / terrainH;
+Terrain* Map::getTerrainAt(int pixelx, int pixely){
+	int x = (pixelx + (terrainW) /2) / (terrainW);
+	int y = (pixely + (terrainH) /2) / (terrainH);
 	int index = (y * w) + x;
 	if (index >= MAX_MAP_DIMENSION || index < 0)
 		return nullptr;
 	return &terrains[index];
 }
 
+Terrain* Map::getTerrainAtTerrains(int _x, int _y) {
+	int index = (_y * w) + _x;
+	if (index >= MAX_MAP_DIMENSION || index < 0)
+		return nullptr;
+	return &terrains[index];
+}
+
+Terrain* Map::getTerrainAtTerrains(Point &p) {
+	int index = (p.y * w) + p.x;
+	if (index >= MAX_MAP_DIMENSION || index < 0)
+		return nullptr;
+	return &terrains[index];
+}
+
+Point Map::getPositionInMap(int pixelx, int pixely) {
+	int x = (pixelx + (terrainW) / 2) / (terrainW);
+	int y = (pixely + (terrainH) / 2) / (terrainH);
+	int index = (y * w) + x;
+	if (index >= MAX_MAP_DIMENSION || index < 0) {
+		return Point();
+	}
+	return Point(x, y);
+}
+
+Point Map::getPixelPositionInMap(int _x, int _y) {
+	int index = (_y * w) + _x;
+	if (index >= MAX_MAP_DIMENSION || index < 0)
+		return Point();
+	int x = terrains[index].getX();
+	int y = terrains[index].getY();
+	return Point(x, y);
+}
+
 void Map::generate() {
 	for (int y = 0; y < h; y++) {
 		for (int x = 0; x < w; x++) {
-			Terrain terrain = Terrain(terrainW, terrainH);
-			terrain.setTile(Tile::grass);
-			terrain.setPosition(x, y);
+			Terrain terrain = Terrain();
+			if ((x == 9 && y == 3) || (x == 9 && y == 4))
+				terrain.setTile(Tile::wall);
+			else
+				terrain.setTile(Tile::grass);
+			terrain.setPosition(x, y, terrainW, terrainH);
 			terrains[(y * w) + x] = terrain;
 		}
 	}
@@ -107,27 +142,26 @@ bool Map::rowIsObstacle(int x, int y, int length, std::bitset<MAX_MAP_DIMENSION>
 
 void Map::editTerrainAt(int _x, int _y, int tile) {
 	Terrain* t = getTerrainAt(_x, _y);
-	t->setTile(tile);
-	generateCollisionMap();
+	if (t) {
+		t->setTile(tile);
+		generateCollisionMap();
+	}
 }
 
 bool Map::isCollidingPredict(Sprite* sprite) {
-	Rect rx = sprite->getPredictiveX();
-	Rect ry = sprite->getPredictiveY();
+	Rect rx = sprite->getPredictiveRectX();
+	Rect ry = sprite->getPredictiveRectY();
 	bool ret = false;
 	for (int i = 0; i < collisionMap.size(); i++) {
 		if (collisionMap[i].intersects(rx)) {
-			//printf("Collision!!\n");
 			sprite->revertXPos();
 			ret = true;
 		}
 		if (collisionMap[i].intersects(ry)) {
-			//printf("Collision!!\n");
 			sprite->revertYPos();
 			ret = true;
 		}
 	}
-	//printf("\n");
 	return ret;
 }
 
@@ -170,21 +204,43 @@ char Map::isCollidingWithType(Sprite* sprite) {
 	Rect r = sprite->getRect();
 	char colType = CollisionType::NONE;
 	for (int i = 0; i < collisionMap.size(); i++) {
-		if (collisionMap[i].collidedFromBot(r) || collisionMap[i].collidedFromTop(r))
+		if (collisionMap[i].collidedFromBot(r) || collisionMap[i].collidedFromTop(r)) {
+			if (colType == CollisionType::VERTICAL)
+				return CollisionType::CORNER;
 			colType = CollisionType::HORIZONTAL;
+		}
 		if (collisionMap[i].collidedFromRight(r) || collisionMap[i].collidedFromLeft(r)) {
 			if (colType == CollisionType::HORIZONTAL)
-				colType = CollisionType::CORNER;
-			else 
-				colType = CollisionType::VERTICAL;
+				return CollisionType::CORNER;
+			colType = CollisionType::VERTICAL;
 		}
 	}
 	return colType;
 }
 
+void Map::update() {
+	for (int i = 0; i < w * h; i++) {
+		terrains[i].setNonVisible();
+	}
+	shadowEngine.computeVisibleCells(chr->getMapPosition(), 15);
+	render();
+}
+
 void Map::render() {
 	for (int i = 0; i < w * h; i++) {
-		terrains[i].render();
+		int drawX = terrains[i].getDrawX();
+		int drawY = terrains[i].getDrawY();
+		switch (terrains[i].getTile()) {
+		case Tile::grass:
+			TextureManager::drawResized(*grass, drawX, drawY, terrainW, terrainH);
+			break;
+		case Tile::wall:
+			TextureManager::drawResized(*wall, drawX, drawY, terrainW, terrainH);
+			break;
+		}
+		if (!terrains[i].isVisible() && terrains[i].getTile() == Tile::grass) {
+			TextureManager::drawResized(*fog, drawX, drawY, terrainW, terrainH);
+		}
 	}
 	if (drawDebug) {
 		for (int i = 0; i < collisionMap.size(); i++) {

@@ -1,5 +1,6 @@
 #include "Terrain.h"
 #include "SpriteBank.h"
+#include "Constants.h"
 
 Terrain::Terrain() {
 }
@@ -8,36 +9,23 @@ Terrain::Terrain() {
 Terrain::~Terrain() {
 }
 
-Terrain::Terrain(short _w, short _h) {
-	w = _w;
-	h = _h;
-}
-
-void Terrain::setPosition(int _x, int _y) {
-	x = _x * w;
-	y = _y * h;
-	drawX = x - ((int)w / 2);
-	drawY = y - ((int)h / 2);
+void Terrain::setPosition(int _x, int _y, int _w, int _h) {
+	x = _x * _w;
+	y = _y * _h;
+	drawX = x - (int)(_w / 2);
+	drawY = y - (int)(_h / 2);
 }
 
 void Terrain::setTile(unsigned char _tile) {
 	tile = _tile;
 	switch (tile) {
 	case Tile::grass:
-		texRegion = &SpriteBank::Instance().Grass;
 		obstacle = false;
 		break;
 	case Tile::wall:
-		texRegion = &SpriteBank::Instance().Wall;
 		obstacle = true;
 		break;
 	default:
 		break;
-	}
-}
-
-void Terrain::render() {
-	if (texRegion) {
-		TextureManager::drawResized(*texRegion, drawX, drawY, w, h);
 	}
 }

@@ -16,6 +16,7 @@ public:
 	virtual void touchUp(int x, int y) {};
 	virtual void touchDragged(int x, int y) {};
 	virtual void mouseMoved(int x, int y) {};
+	virtual void mouseWheel(bool scrollDown, bool scrollUp) {};
 
 protected:
 	float currentTime = 0;

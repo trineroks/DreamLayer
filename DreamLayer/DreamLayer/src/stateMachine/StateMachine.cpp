@@ -69,6 +69,12 @@ void StateMachine::processInput() {
 			else 
 				screen->mouseMoved(event.button.x + Game::camera.pos.x, event.button.y + Game::camera.pos.y);
 			break;
+		case SDL_MOUSEWHEEL:
+			if (event.wheel.y > 0)
+				screen->mouseWheel(false, true);
+			else if (event.wheel.y <= 0)
+				screen->mouseWheel(true, false);
+			break;
 		case SDL_QUIT:
 			exit = true;
 		}

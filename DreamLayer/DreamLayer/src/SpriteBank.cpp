@@ -27,6 +27,7 @@ void SpriteBank::load() {
 	grass = TextureManager::loadTexture("assets/grass.png");
 	wall = TextureManager::loadTexture("assets/wall.png");
 	spyHolstered = TextureManager::loadTexture("assets/spyRotatableHolstered.png");
+	fog = TextureManager::loadTexture("assets/fog.png");
 
 	Player = TextureRegion(sprite, 0, 0, 678, 673);
 	TestCollisionBox = TextureRegion(box, 0, 0, 64, 64);
@@ -36,6 +37,7 @@ void SpriteBank::load() {
 	Bullet = TextureRegion(bullet, 0, 0, 3, 8);
 	Grass = TextureRegion(grass, 0, 0, TILE_PIXELSIZE, TILE_PIXELSIZE);
 	Wall = TextureRegion(wall, 0, 0, TILE_PIXELSIZE, TILE_PIXELSIZE);
+	Fog = TextureRegion(fog, 0, 0, TILE_PIXELSIZE, TILE_PIXELSIZE);
 }
 
 void SpriteBank::clear() {

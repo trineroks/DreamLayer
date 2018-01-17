@@ -23,6 +23,7 @@ public:
 
 	TextureRegion Grass;
 	TextureRegion Wall;
+	TextureRegion Fog;
 
 private:
 	SDL_Texture* sprite;
@@ -33,5 +34,6 @@ private:
 	SDL_Texture* grass;
 	SDL_Texture* wall;
 	SDL_Texture* spyHolstered;
+	SDL_Texture* fog;
 };
 

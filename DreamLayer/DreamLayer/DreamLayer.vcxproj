@@ -146,6 +146,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\ShadowCast.cpp" />
+    <ClCompile Include="src\Drawable.cpp" />
     <ClCompile Include="src\Character.cpp" />
     <ClCompile Include="src\entity\EntityManager.cpp" />
     <ClCompile Include="src\entity\AnimatedSpriteComponent.cpp" />
@@ -164,6 +166,8 @@
     <ClCompile Include="src\Terrain.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\ShadowCast.h" />
+    <ClInclude Include="src\Drawable.h" />
     <ClInclude Include="src\Character.h" />
     <ClInclude Include="src\entity\EntityManager.h" />
     <ClInclude Include="src\entity\AnimatedSpriteComponent.h" />

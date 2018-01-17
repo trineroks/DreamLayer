@@ -17,6 +17,7 @@ Character::~Character() {
 
 void Character::update(Map* map) {
 	Sprite::update();
+	mapPosition = map->getPositionInMap(pos.x, pos.y);
 	updateHolstered(map);
 }
 

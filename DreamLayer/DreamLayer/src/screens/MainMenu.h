@@ -26,6 +26,7 @@ public:
 	void touchUp(int x, int y) override;
 	void touchDragged(int x, int y) override;
 	void mouseMoved(int x, int y) override;
+	void mouseWheel(bool scrollDown, bool scrollUp) override;
 
 	void update(float deltaTime) override;
 	void draw();
@@ -42,7 +43,7 @@ private:
 	void testAngleUpdate();
 	void bounceBullet(Sprite* bullet);
 
-	bool editing = false;
+	char editing = 0;
 
 	int mousex = 0;
 	int mousey = 0;

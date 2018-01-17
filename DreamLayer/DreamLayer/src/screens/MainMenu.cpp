@@ -18,24 +18,26 @@ void MainMenu::cleanUp() {
 }
 
 void MainMenu::init() {
-	Game::setScaleW(0.8f);
-	Game::setScaleH(0.8f);
+	Game::setScaleW(1.0f);
+	Game::setScaleH(1.0f);
+	map.generate();
+	map.drawDebug = true;
+	Point p = map.getPixelPositionInMap(5, 5);
 
 	sprite = Character(SpriteBank::Instance().Spy, SpriteBank::Instance().SpyHolstered);
 	sprite.setCollisionBox(Rect(0,0,32, 32));
 	sprite.drawDebug = true;
 	sprite.setCustomOrientationType(25, 16, 9, 0);
-	sprite.setPosition(300, 300);
+	sprite.setPosition(p.x, p.y);
 	sprite.scale(Game::getScaleW(), Game::getScaleH());
+	
+	map.addPlayer(sprite);
 
 	crosshair = Sprite(SpriteBank::Instance().Crosshair);
 	crosshair.setOrientationType(crosshair.CENTER);
 
 	//SDL_ShowCursor(SDL_DISABLE);
-
-	map.generate();
-	map.scale(Game::getScaleW(), Game::getScaleH());
-	map.drawDebug = true;
+	
 }
 
 void MainMenu::pause() {
@@ -58,6 +60,8 @@ void MainMenu::update(float deltaTime) {
 			bullets[i].update();
 		}
 	}
+	Point p = sprite.getMapPosition();
+	printf("%d, %d\n", p.x, p.y);
 	map.isCollidingPredict(&sprite);
 	testAngleUpdate();
 	draw();
@@ -65,8 +69,8 @@ void MainMenu::update(float deltaTime) {
 
 void MainMenu::bounceBullet(Sprite* bullet) {
 	if (map.isColliding(bullet)) {
-		bullet->revertPos();
 		char collType = map.isCollidingWithType(bullet);
+		bullet->revertPos();
 		if (collType == CollisionType::VERTICAL) {
 			bullet->angle *= -1;
 			bullet->delta.x *= -1;
@@ -96,7 +100,8 @@ void MainMenu::testAngleUpdate() {
 }
 
 void MainMenu::draw() {
-	map.render();
+	map.update();
+	sprite.scale(Game::getScaleW(), Game::getScaleH());
 	sprite.render();
 	crosshair.render();
 	for (int i = bullets.size() - 1; i >= 0; i--) {
@@ -105,8 +110,10 @@ void MainMenu::draw() {
 			bullets.erase(bullets.begin() + i);
 			printf("Bullet cleared\n");
 		}
-		else
+		else {
+			bullets[i].scale(Game::getScaleW(), Game::getScaleH());
 			bullets[i].render();
+		}
 	}
 }
 
@@ -137,11 +144,14 @@ void MainMenu::keyUp(SDL_Keycode key) {
 		Game::camera.delta.x = 0;
 		break;
 	case SDLK_q:
-		editing = false;
+		editing = 0;
 		break;
-	case SDLK_e:
+	case SDLK_f:
 		map.clearMap();
 		printf("Map cleared!\n");
+		break;
+	default:
+		editing = 0;
 		break;
 	}
 }
@@ -173,14 +183,26 @@ void MainMenu::keyDown(SDL_Keycode key) {
 		Game::camera.delta.x = -1 * 5;
 		break;
 	case SDLK_q:
-		editing = true;
+		editing = 1;
+		break;
+	case SDLK_e:
+		editing = 2;
 		break;
 	}
 }
 
 void MainMenu::touchDown(int x, int y) {
-	if (editing) {
-		map.editTerrainAt(x, y, Tile::wall);
+	if (editing != 0) {
+		switch (editing) {
+		case 1:
+			map.editTerrainAt(x, y, Tile::wall);
+			break;
+		case 2:
+			map.editTerrainAt(x, y, Tile::grass);
+			break;
+		default:
+			break;
+		}
 	}
 	else if (!sprite.getHolstered()) {
 		Sprite bullet = Sprite(SpriteBank::Instance().Bullet);
@@ -190,8 +212,8 @@ void MainMenu::touchDown(int x, int y) {
 		bullet.setCustomOrientationType(2, 7, 0, 5);
 
 		float radian = (sprite.angle + 90.0f) * (PI / 180.0f);
-		float startposX = sprite.pos.x + (52 * cos(radian));
-		float startposY = sprite.pos.y + (52 * sin(radian));
+		float startposX = sprite.pos.x + (52 * cos(radian) * Game::getScaleW());
+		float startposY = sprite.pos.y + (52 * sin(radian) * Game::getScaleH());
 		bullet.setPosition((int)startposX, (int)startposY);
 
 		bullet.delta.x = cos(radian) * 7 * Game::getScaleW();
@@ -210,12 +232,30 @@ void MainMenu::touchDragged(int x, int y) {
 	mousex = x;
 	mousey = y;
 
-	if (editing) {
-		map.editTerrainAt(x, y, Tile::wall);
+	if (editing != 0) {
+		switch (editing) {
+		case 1:
+			map.editTerrainAt(x, y, Tile::wall);
+			break;
+		case 2:
+			map.editTerrainAt(x, y, Tile::grass);
+			break;
+		default:
+			break;
+		}
 	}
 }
 
 void MainMenu::mouseMoved(int x, int y) {
 	mousex = x;
 	mousey = y;
+}
+
+void MainMenu::mouseWheel(bool scrollDown, bool scrollUp) {
+	if (scrollDown) {
+		Game::modifyScale(-0.1f);
+	}
+	else if (scrollUp) {
+		Game::modifyScale(0.1f);
+	}
 }
