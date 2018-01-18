@@ -150,6 +150,9 @@ void MainMenu::keyUp(SDL_Keycode key) {
 		map.clearMap();
 		printf("Map cleared!\n");
 		break;
+	case SDLK_t:
+		SpriteBank::Instance().reload();
+		break;
 	default:
 		editing = 0;
 		break;
@@ -198,7 +201,7 @@ void MainMenu::touchDown(int x, int y) {
 			map.editTerrainAt(x, y, Tile::wall);
 			break;
 		case 2:
-			map.editTerrainAt(x, y, Tile::grass);
+			map.editTerrainAt(x, y, Tile::floor1);
 			break;
 		default:
 			break;
@@ -238,7 +241,7 @@ void MainMenu::touchDragged(int x, int y) {
 			map.editTerrainAt(x, y, Tile::wall);
 			break;
 		case 2:
-			map.editTerrainAt(x, y, Tile::grass);
+			map.editTerrainAt(x, y, Tile::floor1);
 			break;
 		default:
 			break;

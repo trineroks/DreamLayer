@@ -13,8 +13,8 @@ void ShadowCast::computeVisibleCells(Point start, int _range) {
 	for (int i = 0; i < 3; i++) {
 //		scanOctant(i, 0, start, Point(1, 1), 0.0);
 	}
-	for (int i = 0; i < 4; i++) {
-		scanOctantTest(i, 0, start, 1.0, 0.0);
+	for (int i = 0; i < 8; i++) {
+		scanOctantTest(i, 1, start, 1.0, 0.0);
 	}
 	//scanOctantTest(2, 0, start, 1.0, 0.0);
 }
@@ -215,7 +215,7 @@ void ShadowCast::scanOctantTest(int octant, int depth, Point start, double start
 				Terrain* t = map->getTerrainAtTerrains(x, y);
 				if (t) {
 					if (t->obstacle) {
-						if (x + 1 >= 0 && !map->getTerrainAtTerrains(x + 1, y)->obstacle)
+						if (x + 1 < map->getWidth() && !map->getTerrainAtTerrains(x + 1, y)->obstacle)
 							scanOctantTest(octant, depth + 1, start, startSlope, getSlope((double)x + 0.5, (double)y + 0.5, start.x, start.y, true));
 					}
 					else {
@@ -283,6 +283,114 @@ void ShadowCast::scanOctantTest(int octant, int depth, Point start, double start
 			y++;
 		}
 		y--;
+		break;
+	case 4:
+		x = start.x - depth;
+		y = start.y + (int)(startSlope * (double)depth);
+		if (x < 0)
+			return;
+		if (y >= map->getHeight())
+			y = map->getHeight() - 1;
+		while (getSlope((double)x, (double)y, (double)start.x, (double)start.y, false) <= endSlope) {
+			if (getDistanceSquared(x, y, start.x, start.y) <= (range * range)) {
+				Terrain* t = map->getTerrainAtTerrains(x, y);
+				if (t) {
+					if (t->obstacle) {
+						if (y + 1 < map->getHeight() && !map->getTerrainAtTerrains(x, y + 1)->obstacle)
+							scanOctantTest(octant, depth + 1, start, startSlope, getSlope((double)x + 0.5, (double)y + 0.5, start.x, start.y, false));
+					}
+					else {
+						if (y + 1 < map->getHeight() && map->getTerrainAtTerrains(x, y + 1)->obstacle) {
+							startSlope = -getSlope((double)x - 0.5, (double)y + 0.5, start.x, start.y, false);
+						}
+					}
+					t->setVisible();
+				}
+			}
+			y--;
+		}
+		y++;
+		break;
+	case 5:
+		y = start.y + depth;
+		x = start.x - (int)(startSlope * (double)depth);
+		if (y >= map->getHeight())
+			return;
+		if (x < 0)
+			x = 0;
+		while (getSlope((double)x, (double)y, (double)start.x, (double)start.y, true) <= endSlope) {
+			if (getDistanceSquared(x, y, start.x, start.y) <= (range * range)) {
+				Terrain* t = map->getTerrainAtTerrains(x, y);
+				if (t) {
+					if (t->obstacle) {
+						if (x - 1 >= 0 && !map->getTerrainAtTerrains(x - 1, y)->obstacle)
+							scanOctantTest(octant, depth + 1, start, startSlope, getSlope((double)x - 0.5, (double)y - 0.5, start.x, start.y, true));
+					}
+					else {
+						if (x - 1 >= 0 && map->getTerrainAtTerrains(x - 1, y)->obstacle) {
+							startSlope = -getSlope((double)x - 0.5, (double)y + 0.5, start.x, start.y, true);
+						}
+					}
+					t->setVisible();
+				}
+			}
+			x++;
+		}
+		x--;
+		break;
+	case 6:
+		y = start.y + depth;
+		x = start.x + (int)(startSlope * (double)depth);
+		if (y >= map->getHeight())
+			return;
+		if (x >= map->getWidth())
+			x = map->getWidth() - 1;
+		while (getSlope((double)x, (double)y, (double)start.x, (double)start.y, true) >= endSlope) {
+			if (getDistanceSquared(x, y, start.x, start.y) <= (range * range)) {
+				Terrain* t = map->getTerrainAtTerrains(x, y);
+				if (t) {
+					if (t->obstacle) {
+						if (x + 1 < map->getWidth() && !map->getTerrainAtTerrains(x + 1, y)->obstacle)
+							scanOctantTest(octant, depth + 1, start, startSlope, getSlope((double)x + 0.5, (double)y - 0.5, start.x, start.y, true));
+					}
+					else {
+						if (x + 1 < map->getWidth() && map->getTerrainAtTerrains(x + 1, y)->obstacle) {
+							startSlope = getSlope((double)x + 0.5, (double)y + 0.5, start.x, start.y, true);
+						}
+					}
+					t->setVisible();
+				}
+			}
+			x--;
+		}
+		x++;
+		break;
+	case 7:
+		x = start.x + depth;
+		y = start.y + (int)(startSlope * (double)depth);
+		if (x >= map->getWidth())
+			return;
+		if (y >= map->getHeight())
+			y = map->getHeight() - 1;
+		while (getSlope((double)x, (double)y, (double)start.x, (double)start.y, false) >= endSlope) {
+			if (getDistanceSquared(x, y, start.x, start.y) <= (range * range)) {
+				Terrain* t = map->getTerrainAtTerrains(x, y);
+				if (t) {
+					if (t->obstacle) {
+						if (y + 1 < map->getHeight() && !map->getTerrainAtTerrains(x, y + 1)->obstacle)
+							scanOctantTest(octant, depth + 1, start, startSlope, getSlope((double)x - 0.5, (double)y + 0.5, start.x, start.y, false));
+					}
+					else {
+						if (y + 1 < map->getHeight() && map->getTerrainAtTerrains(x, y + 1)->obstacle) {
+							startSlope = getSlope((double)x + 0.5, (double)y + 0.5, start.x, start.y, false);
+						}
+					}
+					t->setVisible();
+				}
+			}
+			y--;
+		}
+		y++;
 		break;
 	}
 

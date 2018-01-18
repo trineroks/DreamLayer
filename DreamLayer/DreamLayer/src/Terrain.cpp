@@ -19,13 +19,11 @@ void Terrain::setPosition(int _x, int _y, int _w, int _h) {
 void Terrain::setTile(unsigned char _tile) {
 	tile = _tile;
 	switch (tile) {
-	case Tile::grass:
-		obstacle = false;
-		break;
 	case Tile::wall:
 		obstacle = true;
 		break;
 	default:
+		obstacle = false;
 		break;
 	}
 }

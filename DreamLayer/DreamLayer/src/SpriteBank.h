@@ -21,7 +21,11 @@ public:
 	TextureRegion Crosshair;
 	TextureRegion Bullet;
 
-	TextureRegion Grass;
+	TextureRegion Floor1;
+	TextureRegion Floor2;
+	TextureRegion FloorCrack;
+	TextureRegion FloorDeco1;
+	TextureRegion FloorDeco2;
 	TextureRegion Wall;
 	TextureRegion Fog;
 
@@ -31,7 +35,9 @@ private:
 	SDL_Texture* spy;
 	SDL_Texture* crosshair;
 	SDL_Texture* bullet;
-	SDL_Texture* grass;
+
+	SDL_Texture* terrains;
+
 	SDL_Texture* wall;
 	SDL_Texture* spyHolstered;
 	SDL_Texture* fog;

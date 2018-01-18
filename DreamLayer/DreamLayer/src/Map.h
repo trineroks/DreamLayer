@@ -68,9 +68,5 @@ private:
 	short terrainW, terrainH;
 
 	Character* chr;
-
-	TextureRegion* grass = nullptr;
-	TextureRegion* wall = nullptr;
-	TextureRegion* fog = nullptr;
 };
 

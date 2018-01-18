@@ -2,6 +2,7 @@
 #include "TextureManager.h"
 #include "SpriteBank.h"
 #include "Constants.h"
+#include <stdlib.h>
 
 Map::Map() {
 	w = 60;
@@ -10,10 +11,6 @@ Map::Map() {
 	terrainH = TILE_RENDERSIZE;
 
 	shadowEngine.setMap(*this);
-
-	grass = &SpriteBank::Instance().Grass;
-	wall = &SpriteBank::Instance().Wall;
-	fog = &SpriteBank::Instance().Fog;
 }
 
 Map::~Map() {
@@ -62,13 +59,25 @@ Point Map::getPixelPositionInMap(int _x, int _y) {
 }
 
 void Map::generate() {
+	int r;
 	for (int y = 0; y < h; y++) {
 		for (int x = 0; x < w; x++) {
 			Terrain terrain = Terrain();
 			if ((x == 9 && y == 3) || (x == 9 && y == 4))
 				terrain.setTile(Tile::wall);
-			else
-				terrain.setTile(Tile::grass);
+			else {
+				r = rand() % 20;
+				if (r <= 8)
+					terrain.setTile(Tile::floor1);
+				else if (r <= 16)
+					terrain.setTile(Tile::floor2);
+				else if (r <= 17)
+					terrain.setTile(Tile::floorCrack);
+				else if (r <= 18)
+					terrain.setTile(Tile::floorDeco1);
+				else
+					terrain.setTile(Tile::floorDeco2);
+			}
 			terrain.setPosition(x, y, terrainW, terrainH);
 			terrains[(y * w) + x] = terrain;
 		}
@@ -77,9 +86,20 @@ void Map::generate() {
 }
 
 void Map::clearMap() {
+	int r;
 	for (int y = 0; y < h; y++) {
 		for (int x = 0; x < w; x++) {
-			terrains[(y * w) + x].setTile(Tile::grass);
+			r = rand() % 20;
+			if (r <= 6)
+				terrains[(y * w) + x].setTile(Tile::floor1);
+			else if (r <= 13)
+				terrains[(y * w) + x].setTile(Tile::floor2);
+			else if (r <= 15)
+				terrains[(y * w) + x].setTile(Tile::floorCrack);
+			else if (r <= 17)
+				terrains[(y * w) + x].setTile(Tile::floorDeco1);
+			else
+				terrains[(y * w) + x].setTile(Tile::floorDeco2);
 		}
 	}
 	generateCollisionMap();
@@ -231,15 +251,27 @@ void Map::render() {
 		int drawX = terrains[i].getDrawX();
 		int drawY = terrains[i].getDrawY();
 		switch (terrains[i].getTile()) {
-		case Tile::grass:
-			TextureManager::drawResized(*grass, drawX, drawY, terrainW, terrainH);
+		case Tile::floor1:
+			TextureManager::drawResized(SpriteBank::Instance().Floor1, drawX, drawY, terrainW, terrainH);
+			break;
+		case Tile::floor2:
+			TextureManager::drawResized(SpriteBank::Instance().Floor2, drawX, drawY, terrainW, terrainH);
+			break;
+		case Tile::floorCrack:
+			TextureManager::drawResized(SpriteBank::Instance().FloorCrack, drawX, drawY, terrainW, terrainH);
+			break;
+		case Tile::floorDeco1:
+			TextureManager::drawResized(SpriteBank::Instance().FloorDeco1, drawX, drawY, terrainW, terrainH);
+			break;
+		case Tile::floorDeco2:
+			TextureManager::drawResized(SpriteBank::Instance().FloorDeco2, drawX, drawY, terrainW, terrainH);
 			break;
 		case Tile::wall:
-			TextureManager::drawResized(*wall, drawX, drawY, terrainW, terrainH);
+			TextureManager::drawResized(SpriteBank::Instance().Wall, drawX, drawY, terrainW, terrainH);
 			break;
 		}
-		if (!terrains[i].isVisible() && terrains[i].getTile() == Tile::grass) {
-			TextureManager::drawResized(*fog, drawX, drawY, terrainW, terrainH);
+		if (!terrains[i].isVisible() && terrains[i].getTile() != Tile::wall) {
+			TextureManager::drawResized(SpriteBank::Instance().Fog, drawX, drawY, terrainW, terrainH);
 		}
 	}
 	if (drawDebug) {
