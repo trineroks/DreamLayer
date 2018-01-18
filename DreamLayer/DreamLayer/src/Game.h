@@ -4,6 +4,7 @@
 #include "SDL_image.h"
 #include "SpriteBank.h"
 #include "Vector2D.h"
+#include "Constants.h"
 
 #include "stateMachine/StateMachine.h"
 
@@ -13,9 +14,17 @@ class Camera {
 public:
 	Vector2D pos = Vector2D(0, 0);
 	Vector2D delta = Vector2D(0, 0);
-
+	short w, h;
+	void setDimensions(short _w, short _h) {
+		w = _w;
+		h = _h;
+	}
 	void update() {
 		pos += delta;
+	}
+
+	bool isWithinView(int _x, int _y) {
+		return !(_x > pos.x + w || _x < pos.x || _y > pos.y + h || _y < pos.y);
 	}
 
 	void resetPosition() {

@@ -2,11 +2,12 @@
 #include "TextureManager.h"
 #include "SpriteBank.h"
 #include "Constants.h"
+#include "Game.h"
 #include <stdlib.h>
 
 Map::Map() {
-	w = 60;
-	h = 60;
+	w = 500;
+	h = 500;
 	terrainW = TILE_RENDERSIZE;
 	terrainH = TILE_RENDERSIZE;
 
@@ -42,10 +43,14 @@ Terrain* Map::getTerrainAtTerrains(Point &p) {
 Point Map::getPositionInMap(int pixelx, int pixely) {
 	int x = (pixelx + (terrainW) / 2) / (terrainW);
 	int y = (pixely + (terrainH) / 2) / (terrainH);
-	int index = (y * w) + x;
-	if (index >= MAX_MAP_DIMENSION || index < 0) {
-		return Point();
-	}
+	if (x < 0)
+		x = 0;
+	else if (x >= getWidth())
+		x = getWidth() - 1;
+	if (y < 0)
+		y = 0;
+	else if (y >= getHeight())
+		y = getHeight() - 1;
 	return Point(x, y);
 }
 
@@ -238,40 +243,63 @@ char Map::isCollidingWithType(Sprite* sprite) {
 	return colType;
 }
 
+void Map::getScannableTerrains() {
+	int topX = (int)Game::camera.pos.x;
+	int topY = (int)Game::camera.pos.y;
+	int botX = (int)Game::camera.pos.x + (int)Game::camera.w;
+	int botY = (int)Game::camera.pos.y + (int)Game::camera.h;
+
+	checkStart = getPositionInMap(topX, topY);
+	checkEnd = getPositionInMap(botX, botY);
+}
+
 void Map::update() {
-	for (int i = 0; i < w * h; i++) {
-		terrains[i].setNonVisible();
+	//Restrict operations to only local terrains
+	getScannableTerrains();
+	int localHeight = checkEnd.y - checkStart.y;
+	int localWidth = checkEnd.x - checkStart.x;
+	for (int y = checkStart.y; y <= checkStart.y + localHeight; y++) {
+		for (int x = checkStart.x; x <= checkStart.x + localWidth; x++) {
+			terrains[(y * w) + x].setNonVisible();
+		}
 	}
-	shadowEngine.computeVisibleCells(chr->getMapPosition(), 15);
+	//for (int i = 0; i < w * h; i++) {
+	//		terrains[i].setNonVisible();
+	//}
+	shadowEngine.computeVisibleCells(chr->getMapPosition(), 20);
 	render();
 }
 
 void Map::render() {
-	for (int i = 0; i < w * h; i++) {
-		int drawX = terrains[i].getDrawX();
-		int drawY = terrains[i].getDrawY();
-		switch (terrains[i].getTile()) {
-		case Tile::floor1:
-			TextureManager::drawResized(SpriteBank::Instance().Floor1, drawX, drawY, terrainW, terrainH);
-			break;
-		case Tile::floor2:
-			TextureManager::drawResized(SpriteBank::Instance().Floor2, drawX, drawY, terrainW, terrainH);
-			break;
-		case Tile::floorCrack:
-			TextureManager::drawResized(SpriteBank::Instance().FloorCrack, drawX, drawY, terrainW, terrainH);
-			break;
-		case Tile::floorDeco1:
-			TextureManager::drawResized(SpriteBank::Instance().FloorDeco1, drawX, drawY, terrainW, terrainH);
-			break;
-		case Tile::floorDeco2:
-			TextureManager::drawResized(SpriteBank::Instance().FloorDeco2, drawX, drawY, terrainW, terrainH);
-			break;
-		case Tile::wall:
-			TextureManager::drawResized(SpriteBank::Instance().Wall, drawX, drawY, terrainW, terrainH);
-			break;
-		}
-		if (!terrains[i].isVisible() && terrains[i].getTile() != Tile::wall) {
-			TextureManager::drawResized(SpriteBank::Instance().Fog, drawX, drawY, terrainW, terrainH);
+	int localHeight = checkEnd.y - checkStart.y;
+	int localWidth = checkEnd.x - checkStart.x;
+	for (int y = checkStart.y; y <= checkStart.y + localHeight; y++) {
+		for (int x = checkStart.x; x <= checkStart.x + localWidth; x++) {
+			int drawX = terrains[(y * w) + x].getDrawX();
+			int drawY = terrains[(y * w) + x].getDrawY();
+			switch (terrains[(y * w) + x].getTile()) {
+			case Tile::floor1:
+				TextureManager::drawResized(SpriteBank::Instance().Floor1, drawX, drawY, terrainW, terrainH);
+				break;
+			case Tile::floor2:
+				TextureManager::drawResized(SpriteBank::Instance().Floor2, drawX, drawY, terrainW, terrainH);
+				break;
+			case Tile::floorCrack:
+				TextureManager::drawResized(SpriteBank::Instance().FloorCrack, drawX, drawY, terrainW, terrainH);
+				break;
+			case Tile::floorDeco1:
+				TextureManager::drawResized(SpriteBank::Instance().FloorDeco1, drawX, drawY, terrainW, terrainH);
+				break;
+			case Tile::floorDeco2:
+				TextureManager::drawResized(SpriteBank::Instance().FloorDeco2, drawX, drawY, terrainW, terrainH);
+				break;
+			case Tile::wall:
+				TextureManager::drawResized(SpriteBank::Instance().Wall, drawX, drawY, terrainW, terrainH);
+				break;
+			}
+			if (!terrains[(y * w) + x].isVisible() && terrains[(y * w) + x].getTile() != Tile::wall) {
+				TextureManager::drawResized(SpriteBank::Instance().Fog, drawX, drawY, terrainW, terrainH);
+			}
 		}
 	}
 	if (drawDebug) {

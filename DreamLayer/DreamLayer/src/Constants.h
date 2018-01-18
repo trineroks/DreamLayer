@@ -7,10 +7,10 @@ const static float SECOND = 1000.0f;
 const static float MAX_ENTITIES = 5000;
 const static float PI = 3.14159265;
 
-const static int MAX_MAP_DIMENSION = 256 * 256;
+const static int MAX_MAP_DIMENSION = 500 * 500;
 
 const static int TILE_PIXELSIZE = 64;
-const static int TILE_RENDERSIZE = 32;
+const static int TILE_RENDERSIZE = 16;
 
 namespace CollisionType {
 	const char NONE = 0;

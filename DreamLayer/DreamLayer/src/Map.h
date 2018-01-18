@@ -58,6 +58,7 @@ public:
 	bool drawDebug = false;
 private:
 	bool rowIsObstacle(int x, int y, int length, std::bitset<MAX_MAP_DIMENSION>* bset);
+	void getScannableTerrains();
 
 	Terrain terrains[MAX_MAP_DIMENSION];
 	ShadowCast shadowEngine;
@@ -66,6 +67,9 @@ private:
 	//Locations (simple variable sized rect), Enemies
 	int w, h;
 	short terrainW, terrainH;
+
+	Point checkStart = Point(0, 0);
+	Point checkEnd = Point(0, 0);
 
 	Character* chr;
 };

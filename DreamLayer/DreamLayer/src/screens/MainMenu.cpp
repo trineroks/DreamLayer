@@ -61,7 +61,7 @@ void MainMenu::update(float deltaTime) {
 		}
 	}
 	Point p = sprite.getMapPosition();
-	printf("%d, %d\n", p.x, p.y);
+	//printf("%d, %d\n", p.x, p.y);
 	map.isCollidingPredict(&sprite);
 	testAngleUpdate();
 	draw();

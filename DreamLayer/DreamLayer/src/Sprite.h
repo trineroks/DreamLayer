@@ -44,9 +44,9 @@ public:
 	void setCustomOrientationType(int _xoffset, int _yoffset, int _collxOffset, int _collyOffset);
 	void setOrientationType(PositionType type);
 
-	Point pos = Point(0, 0);
+	Vector2D pos = Vector2D(0, 0);
 
-	Point prevPos = Point(0, 0);
+	Vector2D prevPos = Vector2D(0, 0);
 
 	Vector2D delta = Vector2D(0, 0);
 

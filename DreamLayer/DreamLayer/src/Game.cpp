@@ -25,6 +25,8 @@ void Game::init(const char *title, int x, int y, int width, int height, bool ful
 	wscreen = width;
 	hscreen = height;
 
+	Game::camera.setDimensions(wscreen, hscreen);
+
 	if (!SDL_Init(SDL_INIT_EVERYTHING)) {
 		printf("Subsystems initialized\n");
 
