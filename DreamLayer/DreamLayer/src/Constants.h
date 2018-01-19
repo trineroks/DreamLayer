@@ -10,7 +10,9 @@ const static float PI = 3.14159265;
 const static int MAX_MAP_DIMENSION = 500 * 500;
 
 const static int TILE_PIXELSIZE = 64;
-const static int TILE_RENDERSIZE = 16;
+const static int TILE_RENDERSIZE = 64;
+
+const static int WALL_HEIGHT = 128;
 
 namespace CollisionType {
 	const char NONE = 0;

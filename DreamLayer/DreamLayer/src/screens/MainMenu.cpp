@@ -5,6 +5,7 @@
 #include "../Game.h"
 #include "../Terrain.h"
 #include "../Tile.h"
+#include <stdlib.h>
 
 MainMenu::MainMenu() {
 	
@@ -21,7 +22,7 @@ void MainMenu::init() {
 	Game::setScaleW(1.0f);
 	Game::setScaleH(1.0f);
 	map.generate();
-	map.drawDebug = true;
+	//map.drawDebug = true;
 	Point p = map.getPixelPositionInMap(5, 5);
 
 	sprite = Character(SpriteBank::Instance().Spy, SpriteBank::Instance().SpyHolstered);
@@ -60,11 +61,13 @@ void MainMenu::update(float deltaTime) {
 			bullets[i].update();
 		}
 	}
-	Point p = sprite.getMapPosition();
-	//printf("%d, %d\n", p.x, p.y);
+	Point p = map.getPositionInLightMap(sprite.pos.x, sprite.pos.y);
+	printf("Lightmap coordinate: %d, %d\n", p.x, p.y);
 	map.isCollidingPredict(&sprite);
 	testAngleUpdate();
+	map.update(deltaTime);
 	draw();
+	map.renderWallAndFogLayer(deltaTime);
 }
 
 void MainMenu::bounceBullet(Sprite* bullet) {
@@ -100,7 +103,6 @@ void MainMenu::testAngleUpdate() {
 }
 
 void MainMenu::draw() {
-	map.update();
 	sprite.scale(Game::getScaleW(), Game::getScaleH());
 	sprite.render();
 	crosshair.render();
@@ -195,10 +197,24 @@ void MainMenu::keyDown(SDL_Keycode key) {
 }
 
 void MainMenu::touchDown(int x, int y) {
+	int r = rand() % 4;
 	if (editing != 0) {
 		switch (editing) {
 		case 1:
-			map.editTerrainAt(x, y, Tile::wall);
+			switch (r) {
+			case 0:
+				map.editTerrainAt(x, y, Tile::wall1);
+				break;
+			case 1:
+				map.editTerrainAt(x, y, Tile::wall2);
+				break;
+			case 2:
+				map.editTerrainAt(x, y, Tile::wall3);
+				break;
+			case 3:
+				map.editTerrainAt(x, y, Tile::wallwater);
+				break;
+			}
 			break;
 		case 2:
 			map.editTerrainAt(x, y, Tile::floor1);
@@ -234,11 +250,25 @@ void MainMenu::touchUp(int x, int y) {
 void MainMenu::touchDragged(int x, int y) {
 	mousex = x;
 	mousey = y;
+	int r = rand() % 4;
 
 	if (editing != 0) {
 		switch (editing) {
 		case 1:
-			map.editTerrainAt(x, y, Tile::wall);
+			switch (r) {
+			case 0:
+				map.editTerrainAt(x, y, Tile::wall1);
+				break;
+			case 1:
+				map.editTerrainAt(x, y, Tile::wall2);
+				break;
+			case 2:
+				map.editTerrainAt(x, y, Tile::wall3);
+				break;
+			case 3:
+				map.editTerrainAt(x, y, Tile::wallwater);
+				break;
+			}
 			break;
 		case 2:
 			map.editTerrainAt(x, y, Tile::floor1);

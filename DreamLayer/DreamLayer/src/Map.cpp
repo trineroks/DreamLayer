@@ -11,6 +11,9 @@ Map::Map() {
 	terrainW = TILE_RENDERSIZE;
 	terrainH = TILE_RENDERSIZE;
 
+	lightMapW = w * 4;
+	lightMapH = h * 4;
+
 	shadowEngine.setMap(*this);
 }
 
@@ -40,6 +43,31 @@ Terrain* Map::getTerrainAtTerrains(Point &p) {
 	return &terrains[index];
 }
 
+Point Map::getPositionInLightMap(int pixelx, int pixely) {
+	int x = (pixelx + (terrainW) / 2) / (terrainW);
+	int y = (pixely + (terrainH) / 2) / (terrainH);
+
+	if (x < 0)
+		x = 0;
+	else if (x >= getWidth())
+		x = getWidth() - 1;
+	if (y < 0)
+		y = 0;
+	else if (y >= getHeight())
+		y = getHeight() - 1;
+
+	int modx = (pixelx + (terrainW) / 2) % (terrainW);
+	int mody = (pixely + (terrainH) / 2) % (terrainH);
+
+	int lightx = modx / (terrainW / 4);
+	int lighty = mody / (terrainH / 4);
+
+	int retx = (x * 4) + lightx;
+	int rety = (y * 4) + lighty;
+
+	return Point(retx, rety);
+}
+
 Point Map::getPositionInMap(int pixelx, int pixely) {
 	int x = (pixelx + (terrainW) / 2) / (terrainW);
 	int y = (pixely + (terrainH) / 2) / (terrainH);
@@ -67,27 +95,23 @@ void Map::generate() {
 	int r;
 	for (int y = 0; y < h; y++) {
 		for (int x = 0; x < w; x++) {
-			Terrain terrain = Terrain();
-			if ((x == 9 && y == 3) || (x == 9 && y == 4))
-				terrain.setTile(Tile::wall);
-			else {
-				r = rand() % 20;
-				if (r <= 8)
-					terrain.setTile(Tile::floor1);
-				else if (r <= 16)
-					terrain.setTile(Tile::floor2);
-				else if (r <= 17)
-					terrain.setTile(Tile::floorCrack);
-				else if (r <= 18)
-					terrain.setTile(Tile::floorDeco1);
-				else
-					terrain.setTile(Tile::floorDeco2);
-			}
-			terrain.setPosition(x, y, terrainW, terrainH);
+			Terrain terrain = Terrain(terrainW, terrainH);
+			r = rand() % 20;
+			if (r <= 8)
+				terrain.setTile(Tile::floor1);
+			else if (r <= 16)
+				terrain.setTile(Tile::floor2);
+			else if (r <= 17)
+				terrain.setTile(Tile::floorCrack);
+			else if (r <= 18)
+				terrain.setTile(Tile::floorDeco1);
+			else
+				terrain.setTile(Tile::floorDeco2);
+			terrain.setPosition(x, y);
 			terrains[(y * w) + x] = terrain;
 		}
 	}
-	generateCollisionMap();
+	//generateCollisionMap();
 }
 
 void Map::clearMap() {
@@ -107,7 +131,7 @@ void Map::clearMap() {
 				terrains[(y * w) + x].setTile(Tile::floorDeco2);
 		}
 	}
-	generateCollisionMap();
+	//generateCollisionMap();
 }
 
 void Map::generateCollisionMap() {
@@ -127,8 +151,8 @@ void Map::generateCollisionMap() {
 			if (terrains[index].obstacle && visited[index] == 0) {
 				Terrain t = terrains[index];
 				visited.set(index);
-				collx = t.getDrawX();
-				colly = t.getDrawY();
+				collx = t.getTopLeftX();
+				colly = t.getTopLeftY();
 				int dx = x+1;
 				xlen = 1;
 				while (dx < w && terrains[(y * w) + dx].obstacle && visited[(y * w) + dx] == 0) {
@@ -165,11 +189,29 @@ bool Map::rowIsObstacle(int x, int y, int length, std::bitset<MAX_MAP_DIMENSION>
 	return true;
 }
 
-void Map::editTerrainAt(int _x, int _y, int tile) {
-	Terrain* t = getTerrainAt(_x, _y);
+void Map::editTerrainAt(int pixelx, int pixely, int tile) {
+	Terrain* t = getTerrainAt(pixelx, pixely);
+	Point p = getPositionInMap(pixelx, pixely);
 	if (t) {
+		int index = 0;
 		t->setTile(tile);
-		generateCollisionMap();
+		if (t->obstacle) {
+			for (int y = (p.y * 4); y < (p.y * 4) + 4; y++) {
+				for (int x = (p.x * 4); x < (p.x * 4) + 4; x++) {
+					index = (y * (lightMapW)) + x;
+					lightMap.set(index);
+				}
+			}
+		}
+		else {
+			for (int y = (p.y * 4); y < (p.y * 4) + 4; y++) {
+				for (int x = (p.x * 4); x < (p.x * 4) + 4; x++) {
+					index = (y * (lightMapW)) + x;
+					lightMap.reset(index);
+				}
+			}
+		}
+		//generateCollisionMap();
 	}
 }
 
@@ -253,30 +295,71 @@ void Map::getScannableTerrains() {
 	checkEnd = getPositionInMap(botX, botY);
 }
 
-void Map::update() {
+void Map::update(float delta) {
 	//Restrict operations to only local terrains
 	getScannableTerrains();
 	int localHeight = checkEnd.y - checkStart.y;
 	int localWidth = checkEnd.x - checkStart.x;
-	for (int y = checkStart.y; y <= checkStart.y + localHeight; y++) {
-		for (int x = checkStart.x; x <= checkStart.x + localWidth; x++) {
-			terrains[(y * w) + x].setNonVisible();
+	for (int y = (checkStart.y*4); y <= (checkStart.y * 4) + (localHeight*4) + 3; y++) {
+		for (int x = (checkStart.x*4); x <= (checkStart.x * 4) + (localWidth*4) + 3; x++) {
+			visibilityMap.reset((y * (lightMapW)) + x);
 		}
 	}
-	//for (int i = 0; i < w * h; i++) {
-	//		terrains[i].setNonVisible();
+	//for (int y = (checkStart.y); y <= (checkStart.y) + (localHeight); y++) {
+	//	for (int x = (checkStart.x); x <= (checkStart.x) + (localWidth); x++) {
+	//		terrains[(y * w) + x].setNonVisible();
+	//	}
 	//}
-	shadowEngine.computeVisibleCells(chr->getMapPosition(), 20);
-	render();
+	shadowEngine.computeVisibleCellsGradient(getPositionInLightMap(chr->pos.x, chr->pos.y), 40);
+	//shadowEngine.computeVisibleCells(chr->getMapPosition(), 30);
+	render(delta);
 }
 
-void Map::render() {
+void Map::drawWall(int drawX, int drawY, int mapX, int mapY, Terrain &t, float delta) {
+	//Draw vertical/horizontal walls depending on if there's a wall in front of it
+	int index = ((mapY + 1) * w) + mapX;
+	if (index < MAX_MAP_DIMENSION && terrains[index].obstacle) {
+		TextureManager::drawResized(SpriteBank::Instance().WallTop, drawX, drawY, terrainW, terrainH);
+	}
+	else {
+		switch (t.getTile()) {
+		case Tile::wall1:
+			TextureManager::drawResized(SpriteBank::Instance().Wall1, drawX, drawY, terrainW, (terrainH * 2));
+			break;
+		case Tile::wall2:
+			TextureManager::drawResized(SpriteBank::Instance().Wall2, drawX, drawY, terrainW, (terrainH * 2));
+			break;
+		case Tile::wall3:
+			TextureManager::drawResized(SpriteBank::Instance().Wall3, drawX, drawY, terrainW, (terrainH * 2));
+			break;
+		case Tile::wallwater:
+			t.updateAnimationIndex(delta);
+			switch (t.getAnimationIndex()) {
+			case 0:
+				TextureManager::drawResized(SpriteBank::Instance().WallWater1, drawX, drawY, terrainW, (terrainH * 2));
+				break;
+			case 1:
+				TextureManager::drawResized(SpriteBank::Instance().WallWater2, drawX, drawY, terrainW, (terrainH * 2));
+				break;
+			default:
+				TextureManager::drawResized(SpriteBank::Instance().WallWater2, drawX, drawY, terrainW, (terrainH * 2));
+				break;
+			}
+			break;
+		default:
+			break;
+		}
+	}
+}
+
+void Map::render(float delta) {
 	int localHeight = checkEnd.y - checkStart.y;
 	int localWidth = checkEnd.x - checkStart.x;
 	for (int y = checkStart.y; y <= checkStart.y + localHeight; y++) {
 		for (int x = checkStart.x; x <= checkStart.x + localWidth; x++) {
 			int drawX = terrains[(y * w) + x].getDrawX();
 			int drawY = terrains[(y * w) + x].getDrawY();
+			int topLeftY = terrains[(y * w) + x].getTopLeftY();
 			switch (terrains[(y * w) + x].getTile()) {
 			case Tile::floor1:
 				TextureManager::drawResized(SpriteBank::Instance().Floor1, drawX, drawY, terrainW, terrainH);
@@ -293,18 +376,48 @@ void Map::render() {
 			case Tile::floorDeco2:
 				TextureManager::drawResized(SpriteBank::Instance().FloorDeco2, drawX, drawY, terrainW, terrainH);
 				break;
-			case Tile::wall:
-				TextureManager::drawResized(SpriteBank::Instance().Wall, drawX, drawY, terrainW, terrainH);
+			default:
 				break;
-			}
-			if (!terrains[(y * w) + x].isVisible() && terrains[(y * w) + x].getTile() != Tile::wall) {
-				TextureManager::drawResized(SpriteBank::Instance().Fog, drawX, drawY, terrainW, terrainH);
 			}
 		}
 	}
 	if (drawDebug) {
 		for (int i = 0; i < collisionMap.size(); i++) {
 			collisionMap[i].drawDebugBox();
+		}
+	}
+}
+
+void Map::renderWallAndFogLayer(float delta) {
+	int localHeight = checkEnd.y - checkStart.y;
+	int localWidth = checkEnd.x - checkStart.x;
+	int fogW = terrainW / 4;
+	int fogH = terrainH / 4;
+	for (int y = (checkStart.y * 4); y <= (checkStart.y * 4) + (localHeight * 4) + 3; y++) {
+		for (int x = (checkStart.x * 4); x <= (checkStart.x * 4) + (localWidth * 4) + 3; x++) {
+			if (!lightMap[(y * lightMapW) + x] && !visibilityMap[(y * lightMapW) + x]) {
+				TextureManager::drawResized(SpriteBank::Instance().Fog, (x * fogW) - (terrainW / 2), (y * fogH) - (terrainH / 2), fogW, fogH);
+			}
+		}
+	}
+
+	/*for (int y = (checkStart.y); y <= (checkStart.y) + (localHeight); y++) {
+		for (int x = (checkStart.x); x <= (checkStart.x) + (localWidth); x++) {
+			int drawX = terrains[(y * w) + x].getDrawX();
+			int drawY = terrains[(y * w) + x].getDrawY();
+			if(!terrains[(y * w) + x].isVisible() && !terrains[(y * w) + x].obstacle)
+				TextureManager::drawResized(SpriteBank::Instance().Fog, drawX, drawY, terrainW, terrainH);
+		}
+	}*/
+
+	//TODO: Optimize the wall drawing subroutine to reduce runtime.
+	for (int y = checkStart.y; y <= checkStart.y + localHeight; y++) {
+		for (int x = checkStart.x; x <= checkStart.x + localWidth; x++) {
+			int drawX = terrains[(y * w) + x].getDrawX();
+			int drawY = terrains[(y * w) + x].getDrawY();
+			if (terrains[(y * w) + x].obstacle) {
+				drawWall(drawX, drawY, x, y, terrains[(y * w) + x], delta);
+			}
 		}
 	}
 }

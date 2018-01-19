@@ -21,8 +21,9 @@ public:
 
 	void generate();
 	void generateCollisionMap();
-	void update();
-	void render();
+	void update(float delta);
+	void render(float delta);
+	void renderWallAndFogLayer(float delta);
 
 	bool isCollidingPredict(Sprite* sprite);
 	bool isColliding(Sprite* sprite);
@@ -33,10 +34,13 @@ public:
 
 	void clearMap();
 
-	void editTerrainAt(int _x, int _y, int tile);
+	void editTerrainAt(int pixelx, int pixely, int tile);
 
 	//Using pixel coordinates, return the map coordinate at this area.
 	Point getPositionInMap(int pixelx, int pixely);
+
+	//Using pixel coordinates, return the lightmap coordinate at this area.
+	Point getPositionInLightMap(int pixelx, int pixely);
 
 	//Using map coordinates, return the pixel coordinate of this area.
 	Point getPixelPositionInMap(int _x, int _y);
@@ -55,12 +59,33 @@ public:
 		return h;
 	}
 
+	int getLightMapW() {
+		return lightMapW;
+	}
+
+	int getLightMapH() {
+		return lightMapH;
+	}
+
+	bool getLightMapValueAt(int x, int y) {
+		return lightMap[(y * lightMapW) + x];
+	}
+
+	void setVisibilityAt(int x, int y) {
+		visibilityMap.set((y * lightMapW) + x);
+	}
 	bool drawDebug = false;
 private:
 	bool rowIsObstacle(int x, int y, int length, std::bitset<MAX_MAP_DIMENSION>* bset);
 	void getScannableTerrains();
 
+	void drawWall(int drawX, int drawY, int mapX, int mapY, Terrain &t, float delta);
+
 	Terrain terrains[MAX_MAP_DIMENSION];
+	std::bitset<MAX_MAP_DIMENSION * 16> lightMap;
+	std::bitset<MAX_MAP_DIMENSION * 16> visibilityMap;
+	int lightMapW, lightMapH;
+
 	ShadowCast shadowEngine;
 
 	std::vector<Rect> collisionMap;
