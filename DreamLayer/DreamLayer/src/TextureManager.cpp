@@ -31,6 +31,10 @@ void TextureManager::drawResized(TextureRegion textRegion, int x, int y, int w, 
 	drawResized(textRegion, x, y, w, h, 0, 0, 0, SDL_FLIP_NONE);
 }
 
+void TextureManager::drawResized(TextureRegion textRegion, int x, int y, int w, int h, SDL_RendererFlip flip) {
+	drawResized(textRegion, x, y, w, h, 0, 0, 0, flip);
+}
+
 void TextureManager::drawResized(TextureRegion textRegion, int x, int y, int w, int h, double degrees, int rotatex, int rotatey) {
 	drawResized(textRegion, x, y, w, h, degrees, rotatex, rotatey, SDL_FLIP_NONE);
 }

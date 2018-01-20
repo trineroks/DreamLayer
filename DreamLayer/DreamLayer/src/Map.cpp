@@ -318,36 +318,168 @@ void Map::update(float delta) {
 void Map::drawWall(int drawX, int drawY, int mapX, int mapY, Terrain &t, float delta) {
 	//Draw vertical/horizontal walls depending on if there's a wall in front of it
 	int index = ((mapY + 1) * w) + mapX;
+	//BotNeighbor in this case is always true
 	if (index < MAX_MAP_DIMENSION && terrains[index].obstacle) {
-		TextureManager::drawResized(SpriteBank::Instance().WallTop, drawX, drawY, terrainW, terrainH);
+		bool topNeighbor = false;
+		bool rightNeighbor = false;
+		bool leftNeighbor = false;
+		int checkTop = ((mapY - 1) * w) + mapX;
+		if (mapY - 1 >= 0) {
+			if (terrains[checkTop].obstacle) {
+				topNeighbor = true;
+			}
+		}
+		int checkRight = ((mapY)* w) + mapX + 1;
+		if (mapX + 1 < getWidth()) {
+			if (terrains[checkRight].obstacle) {
+				rightNeighbor = true;
+			}
+		}
+		int checkLeft = ((mapY)* w) + mapX - 1;
+		if (mapX - 1 >= 0) {
+			if (terrains[checkLeft].obstacle) {
+				leftNeighbor = true;
+			}
+		}
+		//  X
+		// X[]X
+		//  []
+		if (!topNeighbor && !rightNeighbor && !leftNeighbor) {
+			TextureManager::drawResized(SpriteBank::Instance().WallVertTopEnd, drawX, drawY, terrainW, terrainH);
+		}
+		//  []
+		// X[]X
+		//  []
+		else if (topNeighbor && !rightNeighbor && !leftNeighbor) {
+			TextureManager::drawResized(SpriteBank::Instance().WallVert, drawX, drawY, terrainW, (terrainH));
+		}
+		//  []
+		// X[][]
+		//  []
+		else if (topNeighbor && rightNeighbor && !leftNeighbor) {
+			//replace this with a different texture once the time comes
+			TextureManager::drawResized(SpriteBank::Instance().WallVertRIntersect, drawX, drawY, terrainW, (terrainH));
+		}
+		//  []
+		//[][][]
+		//  []
+		else if (topNeighbor && rightNeighbor && leftNeighbor) {
+			TextureManager::drawResized(SpriteBank::Instance().WallVertIntersect, drawX, drawY, terrainW, (terrainH));
+		}
+		//  X
+		// X[][]
+		//  []
+		else if (!topNeighbor && rightNeighbor && !leftNeighbor) {
+			TextureManager::drawResized(SpriteBank::Instance().WallVertCorner, drawX, drawY, terrainW, (terrainH));
+		}
+		//  X
+		//[][][]
+		//  []
+		else if (!topNeighbor && rightNeighbor && leftNeighbor) {
+			TextureManager::drawResized(SpriteBank::Instance().WallVertTIntersect, drawX, drawY, terrainW, (terrainH));
+		}
+		//  X
+		//[][]X
+		//  []
+		else if (!topNeighbor && !rightNeighbor && leftNeighbor) {
+			TextureManager::drawResized(SpriteBank::Instance().WallVertCorner, drawX, drawY, terrainW, (terrainH), SDL_FLIP_HORIZONTAL);
+		}
+		//  []
+		//[][]X
+		//  []
+		else if (topNeighbor && !rightNeighbor && leftNeighbor) {
+			//replace this with a different texture once the time comes
+			TextureManager::drawResized(SpriteBank::Instance().WallVertRIntersect, drawX, drawY, terrainW, (terrainH), SDL_FLIP_HORIZONTAL);
+		}
 	}
 	else {
+		bool topNeighbor = false;
+		bool rightNeighbor = false;
+		bool leftNeighbor = false;
 		switch (t.getTile()) {
 		case Tile::wall1:
-			TextureManager::drawResized(SpriteBank::Instance().Wall1, drawX, drawY, terrainW, (terrainH * 2));
+			TextureManager::drawResized(SpriteBank::Instance().WallDark, drawX, drawY, terrainW, (terrainH * 2));
 			break;
 		case Tile::wall2:
-			TextureManager::drawResized(SpriteBank::Instance().Wall2, drawX, drawY, terrainW, (terrainH * 2));
-			break;
-		case Tile::wall3:
-			TextureManager::drawResized(SpriteBank::Instance().Wall3, drawX, drawY, terrainW, (terrainH * 2));
+			TextureManager::drawResized(SpriteBank::Instance().WallLight, drawX, drawY, terrainW, (terrainH * 2));
 			break;
 		case Tile::wallwater:
 			t.updateAnimationIndex(delta);
 			switch (t.getAnimationIndex()) {
 			case 0:
-				TextureManager::drawResized(SpriteBank::Instance().WallWater1, drawX, drawY, terrainW, (terrainH * 2));
+				TextureManager::drawResized(SpriteBank::Instance().WallMoss1, drawX, drawY, terrainW, (terrainH * 2));
 				break;
 			case 1:
-				TextureManager::drawResized(SpriteBank::Instance().WallWater2, drawX, drawY, terrainW, (terrainH * 2));
+				TextureManager::drawResized(SpriteBank::Instance().WallMoss2, drawX, drawY, terrainW, (terrainH * 2));
+				break;
+			case 2:
+				TextureManager::drawResized(SpriteBank::Instance().WallMoss3, drawX, drawY, terrainW, (terrainH * 2));
 				break;
 			default:
-				TextureManager::drawResized(SpriteBank::Instance().WallWater2, drawX, drawY, terrainW, (terrainH * 2));
+				TextureManager::drawResized(SpriteBank::Instance().WallMoss4, drawX, drawY, terrainW, (terrainH * 2));
 				break;
 			}
 			break;
 		default:
 			break;
+		}
+		int checkTop = ((mapY - 1) * w) + mapX;
+		if (mapY - 1 >= 0) {
+			if (terrains[checkTop].obstacle) {
+				topNeighbor = true;
+			}
+		}
+		int checkRight = ((mapY) * w) + mapX + 1;
+		if (mapX + 1 < getWidth()) {
+			if (terrains[checkRight].obstacle) {
+				rightNeighbor = true;
+			}
+		}
+		int checkLeft = ((mapY)* w) + mapX - 1;
+		if (mapX - 1 >= 0) {
+			if (terrains[checkLeft].obstacle) {
+				leftNeighbor = true;
+			}
+		}
+		// 
+		//  []
+		if (!topNeighbor && !rightNeighbor && !leftNeighbor) {
+			TextureManager::drawResized(SpriteBank::Instance().WallHorizIsolate, drawX, drawY, terrainW, (terrainH/2));
+		}
+		//  []
+		// X[]X
+		else if (topNeighbor && !rightNeighbor && !leftNeighbor) {
+			TextureManager::drawResized(SpriteBank::Instance().WallHorizBotEnd, drawX, drawY, terrainW, (terrainH / 2));
+		}
+		//  [] 
+		// X[][]
+		else if (topNeighbor && rightNeighbor && !leftNeighbor) {
+			TextureManager::drawResized(SpriteBank::Instance().WallHorizCorner, drawX, drawY, terrainW, (terrainH / 2));
+		}
+		//  []
+		//[][][]
+		else if (topNeighbor && rightNeighbor && leftNeighbor) {
+			TextureManager::drawResized(SpriteBank::Instance().WallHorizOpenTop, drawX, drawY, terrainW, (terrainH / 2));
+		}
+		// 
+		// X[][]
+		else if (!topNeighbor && rightNeighbor && !leftNeighbor) {
+			TextureManager::drawResized(SpriteBank::Instance().WallHorizEnd, drawX, drawY, terrainW, (terrainH / 2));
+		}
+		// 
+		//[][][]
+		else if (!topNeighbor && rightNeighbor && leftNeighbor) {
+			TextureManager::drawResized(SpriteBank::Instance().WallHoriz, drawX, drawY, terrainW, (terrainH / 2));
+		}
+		// 
+		//[][]X
+		else if (!topNeighbor && !rightNeighbor && leftNeighbor) {
+			TextureManager::drawResized(SpriteBank::Instance().WallHorizEnd, drawX, drawY, terrainW, (terrainH / 2), SDL_FLIP_HORIZONTAL);
+		}
+		//  []
+		//[][]X
+		else if (topNeighbor && !rightNeighbor && leftNeighbor) {
+			TextureManager::drawResized(SpriteBank::Instance().WallHorizCorner, drawX, drawY, terrainW, (terrainH / 2), SDL_FLIP_HORIZONTAL);
 		}
 	}
 }
@@ -390,6 +522,8 @@ void Map::render(float delta) {
 
 void Map::renderWallAndFogLayer(float delta) {
 	int localHeight = checkEnd.y - checkStart.y;
+	if (localHeight + 1 < getHeight())
+		localHeight = localHeight + 1;
 	int localWidth = checkEnd.x - checkStart.x;
 	int fogW = terrainW / 4;
 	int fogH = terrainH / 4;

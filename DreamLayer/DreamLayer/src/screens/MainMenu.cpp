@@ -197,7 +197,7 @@ void MainMenu::keyDown(SDL_Keycode key) {
 }
 
 void MainMenu::touchDown(int x, int y) {
-	int r = rand() % 4;
+	int r = rand() % 3;
 	if (editing != 0) {
 		switch (editing) {
 		case 1:
@@ -209,9 +209,6 @@ void MainMenu::touchDown(int x, int y) {
 				map.editTerrainAt(x, y, Tile::wall2);
 				break;
 			case 2:
-				map.editTerrainAt(x, y, Tile::wall3);
-				break;
-			case 3:
 				map.editTerrainAt(x, y, Tile::wallwater);
 				break;
 			}
@@ -250,7 +247,7 @@ void MainMenu::touchUp(int x, int y) {
 void MainMenu::touchDragged(int x, int y) {
 	mousex = x;
 	mousey = y;
-	int r = rand() % 4;
+	int r = rand() % 3;
 
 	if (editing != 0) {
 		switch (editing) {
@@ -263,9 +260,6 @@ void MainMenu::touchDragged(int x, int y) {
 				map.editTerrainAt(x, y, Tile::wall2);
 				break;
 			case 2:
-				map.editTerrainAt(x, y, Tile::wall3);
-				break;
-			case 3:
 				map.editTerrainAt(x, y, Tile::wallwater);
 				break;
 			}

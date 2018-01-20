@@ -1,0 +1,89 @@
+WallTop.png
+size: 64, 576
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+WallHoriz
+  rotate: false
+  xy: 0, 0
+  size: 64, 32
+  orig: 64, 32
+  offset: 0, 0
+  index: -1
+WallHorizBotEnd
+  rotate: false
+  xy: 0, 32
+  size: 64, 32
+  orig: 64, 32
+  offset: 0, 0
+  index: -1
+WallHorizCorner
+  rotate: false
+  xy: 0, 64
+  size: 64, 32
+  orig: 64, 32
+  offset: 0, 0
+  index: -1
+WallHorizEnd
+  rotate: false
+  xy: 0, 96
+  size: 64, 32
+  orig: 64, 32
+  offset: 0, 0
+  index: -1
+WallHorizIsolate
+  rotate: false
+  xy: 0, 128
+  size: 64, 32
+  orig: 64, 32
+  offset: 0, 0
+  index: -1
+WallHorizOpenTop
+  rotate: false
+  xy: 0, 160
+  size: 64, 32
+  orig: 64, 32
+  offset: 0, 0
+  index: -1
+WallVert
+  rotate: false
+  xy: 0, 192
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+WallVertCorner
+  rotate: false
+  xy: 0, 256
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+WallVertIntersect
+  rotate: false
+  xy: 0, 320
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+WallVertrIntersection
+  rotate: false
+  xy: 0, 384
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+WallVertTIntersect
+  rotate: false
+  xy: 0, 448
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+WallVertTopEnd
+  rotate: false
+  xy: 0, 512
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1

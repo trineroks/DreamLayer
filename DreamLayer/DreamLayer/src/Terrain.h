@@ -64,7 +64,7 @@ public:
 		if (currTime >= speed) {
 			animationIndex++;
 			currTime = 0.0f;
-			if (animationIndex > 1)
+			if (animationIndex > maxAnimationIndex)
 				animationIndex = 0;
 		}
 	}
@@ -72,7 +72,7 @@ public:
 	void resetAnimationIndex() {
 		animationIndex = 0;
 	}
-	
+
 	bool obstacle = false;
 private:
 	void modifyDrawCoords();
@@ -94,5 +94,6 @@ private:
 	float currTime = 0.0f;
 	float speed = 100.0f;
 	short animationIndex = 0;
+	short maxAnimationIndex = 0;
 };
 

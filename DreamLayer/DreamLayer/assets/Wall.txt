@@ -1,0 +1,47 @@
+Wall.png
+size: 64, 768
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+WallDarkMix
+  rotate: false
+  xy: 0, 0
+  size: 64, 128
+  orig: 64, 128
+  offset: 0, 0
+  index: -1
+WallLight
+  rotate: false
+  xy: 0, 128
+  size: 64, 128
+  orig: 64, 128
+  offset: 0, 0
+  index: -1
+WallMoss1
+  rotate: false
+  xy: 0, 256
+  size: 64, 128
+  orig: 64, 128
+  offset: 0, 0
+  index: -1
+WallMoss2
+  rotate: false
+  xy: 0, 384
+  size: 64, 128
+  orig: 64, 128
+  offset: 0, 0
+  index: -1
+WallMoss3
+  rotate: false
+  xy: 0, 512
+  size: 64, 128
+  orig: 64, 128
+  offset: 0, 0
+  index: -1
+WallMoss4
+  rotate: false
+  xy: 0, 640
+  size: 64, 128
+  orig: 64, 128
+  offset: 0, 0
+  index: -1

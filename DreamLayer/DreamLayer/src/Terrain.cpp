@@ -45,6 +45,7 @@ void Terrain::setTile(unsigned char _tile) {
 		break;
 	case Tile::wallwater:
 		obstacle = true;
+		maxAnimationIndex = 3;
 		break;
 	default:
 		obstacle = false;
