@@ -146,6 +146,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\AStarPathfind.cpp" />
+    <ClCompile Include="src\Monster.cpp" />
+    <ClCompile Include="src\BinReader.cpp" />
+    <ClCompile Include="src\BinSerializer.cpp" />
     <ClCompile Include="src\ShadowCast.cpp" />
     <ClCompile Include="src\Drawable.cpp" />
     <ClCompile Include="src\Character.cpp" />
@@ -166,6 +170,11 @@
     <ClCompile Include="src\Terrain.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\AStarPathfind.h" />
+    <ClInclude Include="src\Monster.h" />
+    <ClInclude Include="src\BinReader.h" />
+    <ClInclude Include="src\BinSerializer.h" />
+    <ClInclude Include="src\Serializable.h" />
     <ClInclude Include="src\ShadowCast.h" />
     <ClInclude Include="src\Drawable.h" />
     <ClInclude Include="src\Character.h" />

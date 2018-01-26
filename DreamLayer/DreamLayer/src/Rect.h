@@ -1,6 +1,7 @@
 #pragma once
 #include "TextureManager.h"
 #include "SpriteBank.h"
+#include "Constants.h"
 
 class TextureManager;
 class Rect{
@@ -17,6 +18,13 @@ public:
 	int prevy = 0;
 
 	Rect() {}
+
+	Rect(int _x, int _y, int _w, int _h, float _wscale, float _hscale)
+		: Rect(_x, _y, _w, _h)
+	{
+		wscale = _wscale;
+		hscale = _hscale;
+	}
 
 	Rect(int _x, int _y, int _w, int _h) {
 		x = _x;
@@ -50,6 +58,22 @@ public:
 	void setDimension(int _w, int _h) {
 		w = _w;
 		h = _h;
+	}
+
+	Point topLeft() {
+		return Point(x, y);
+	}
+
+	Point topRight() {
+		return Point(x + (w * wscale), y);
+	}
+
+	Point botLeft() {
+		return Point(x, y + (h * hscale));
+	}
+
+	Point botRight() {
+		return Point(x + (w * wscale), y + (h * hscale));
 	}
 
 	bool contains(int _x, int _y) {

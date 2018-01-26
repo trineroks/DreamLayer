@@ -20,6 +20,27 @@ Map::Map() {
 Map::~Map() {
 }
 
+void Map::save(BinSerializer* b) {
+
+}
+
+void Map::load(BinReader* b) {
+
+}
+
+bool Map::tileIsObstacle(int pixelx, int pixely) {
+	int x = (pixelx + (terrainW) / 2) / (terrainW);
+	int y = (pixely + (terrainH) / 2) / (terrainH);
+	int index = (y * w) + x;
+	if (index >= MAX_MAP_DIMENSION || index < 0)
+		return true;
+	return terrains[index].obstacle;
+}
+
+bool Map::tileIsObstacle(Point pixel) {
+	return tileIsObstacle(pixel.x, pixel.y);
+}
+
 Terrain* Map::getTerrainAt(int pixelx, int pixely){
 	int x = (pixelx + (terrainW) /2) / (terrainW);
 	int y = (pixely + (terrainH) /2) / (terrainH);
@@ -37,10 +58,7 @@ Terrain* Map::getTerrainAtTerrains(int _x, int _y) {
 }
 
 Terrain* Map::getTerrainAtTerrains(Point &p) {
-	int index = (p.y * w) + p.x;
-	if (index >= MAX_MAP_DIMENSION || index < 0)
-		return nullptr;
-	return &terrains[index];
+	return getTerrainAtTerrains(p.x, p.y);
 }
 
 Point Map::getPositionInLightMap(int pixelx, int pixely) {
@@ -86,8 +104,8 @@ Point Map::getPixelPositionInMap(int _x, int _y) {
 	int index = (_y * w) + _x;
 	if (index >= MAX_MAP_DIMENSION || index < 0)
 		return Point();
-	int x = terrains[index].getX();
-	int y = terrains[index].getY();
+	int x = terrains[index].getPixelPosX();
+	int y = terrains[index].getPixelPosY();
 	return Point(x, y);
 }
 
@@ -111,7 +129,6 @@ void Map::generate() {
 			terrains[(y * w) + x] = terrain;
 		}
 	}
-	//generateCollisionMap();
 }
 
 void Map::clearMap() {
@@ -131,62 +148,9 @@ void Map::clearMap() {
 				terrains[(y * w) + x].setTile(Tile::floorDeco2);
 		}
 	}
-	//generateCollisionMap();
-}
-
-void Map::generateCollisionMap() {
-	collisionMap.clear();
-	std::bitset<MAX_MAP_DIMENSION> visited;
-	int index = 0;
-	int collx = 0;
-	int colly = 0;
-	int collw = 0;
-	int collh = 0;
-	int xlen = 0;
-	int ylen = 0;
-	int collIndex = 0;
-	for (int y = 0; y < h; y++) {
-		for (int x = 0; x < w; x++) {
-			index = (y * w) + x;
-			if (terrains[index].obstacle && visited[index] == 0) {
-				Terrain t = terrains[index];
-				visited.set(index);
-				collx = t.getTopLeftX();
-				colly = t.getTopLeftY();
-				int dx = x+1;
-				xlen = 1;
-				while (dx < w && terrains[(y * w) + dx].obstacle && visited[(y * w) + dx] == 0) {
-					visited.set((y * w) + dx);
-					dx++;
-					xlen++;
-				}
-				collw = terrainW * xlen;
-				int dy = y + 1;
-				ylen = 1;
-				while (dy < h && rowIsObstacle(x, dy, xlen, &visited)) {
-					ylen++;
-					dy++;
-				}
-				collh = terrainH * ylen;
-				collisionMap.emplace_back(Rect(collx, colly, collw, collh));
-				collIndex++;
-				x = dx;
-			}
-		}
+	for (int i = 0; i < lightMap.size(); i++) {
+		lightMap.reset(i);
 	}
-}
-
-bool Map::rowIsObstacle(int x, int y, int length, std::bitset<MAX_MAP_DIMENSION>* bset) {
-	for (int i = 0; i < length; i++) {
-		int index = (y * w) + x + i;
-		if (!terrains[index].obstacle)
-			return false;
-	}
-	for (int i = 0; i < length; i++) {
-		int index = (y * w) + x + i;
-		bset->set(index);
-	}
-	return true;
 }
 
 void Map::editTerrainAt(int pixelx, int pixely, int tile) {
@@ -211,78 +175,47 @@ void Map::editTerrainAt(int pixelx, int pixely, int tile) {
 				}
 			}
 		}
-		//generateCollisionMap();
 	}
 }
 
-bool Map::isCollidingPredict(Sprite* sprite) {
+bool Map::isTileTraversableAI(Point start, Point end, Sprite &sprite) {
+	bool ret = false;
+	if (end.x < 0 || end.x >= getWidth() || end.y < 0 || end.y >= getHeight()) {
+		return false;
+	}
+	int x1 = terrains[(start.y * w) + start.x].getPixelPosX();
+	int y1 = terrains[(start.y * w) + start.x].getPixelPosY();
+	int x2 = terrains[(end.y * w) + end.x].getPixelPosX();
+	int y2 = terrains[(end.y * w) + end.x].getPixelPosY();
+	int midx = (x1 + x2)/2;
+	int midy = (y1 + y2)/2;
+	sprite.setPosition(midx, midy);
+	ret = isColliding(sprite.getRect());
+	sprite.revertPos();
+	return ret;
+}
+
+//Check all 4 corners of the collision box for collision
+bool Map::isColliding(Rect collBox) {
+	return (tileIsObstacle(collBox.topLeft()) ||
+		tileIsObstacle(collBox.topRight()) ||
+		tileIsObstacle(collBox.botLeft()) ||
+		tileIsObstacle(collBox.botRight()));
+}
+
+bool Map::willCollideHandle(Sprite* sprite) {
 	Rect rx = sprite->getPredictiveRectX();
 	Rect ry = sprite->getPredictiveRectY();
 	bool ret = false;
-	for (int i = 0; i < collisionMap.size(); i++) {
-		if (collisionMap[i].intersects(rx)) {
-			sprite->revertXPos();
-			ret = true;
-		}
-		if (collisionMap[i].intersects(ry)) {
-			sprite->revertYPos();
-			ret = true;
-		}
+	if (isColliding(rx)) {
+		sprite->revertXPos();
+		ret = true;
+	}
+	if (isColliding(ry)) {
+		sprite->revertYPos();
+		ret = true;
 	}
 	return ret;
-}
-
-bool Map::testCollideDirection(Sprite* sprite) {
-	Rect r = sprite->getRect();
-	Rect col;
-	bool ret = false;
-	for (int i = 0; i < collisionMap.size(); i++) {
-		col = collisionMap[i];
-		if (col.collidedFromBot(r)) {
-			printf("Collided from Bottom!\n");
-			ret = true;
-		}
-		if (col.collidedFromTop(r)) {
-			printf("Collided from Top!\n");
-			ret = true;
-		}
-		if (col.collidedFromRight(r)) {
-			printf("Collided from Right!\n");
-			ret = true;
-		}
-		if (col.collidedFromLeft(r)) {
-			printf("Collided from Left!\n");
-			ret = true;
-		}
-	}
-	return ret;
-}
-
-bool Map::isColliding(Sprite* sprite) {
-	Rect r = sprite->getRect();
-	for (int i = 0; i < collisionMap.size(); i++) {
-		if (collisionMap[i].intersects(r))
-			return true;
-	}
-	return false;
-}
-
-char Map::isCollidingWithType(Sprite* sprite) {
-	Rect r = sprite->getRect();
-	char colType = CollisionType::NONE;
-	for (int i = 0; i < collisionMap.size(); i++) {
-		if (collisionMap[i].collidedFromBot(r) || collisionMap[i].collidedFromTop(r)) {
-			if (colType == CollisionType::VERTICAL)
-				return CollisionType::CORNER;
-			colType = CollisionType::HORIZONTAL;
-		}
-		if (collisionMap[i].collidedFromRight(r) || collisionMap[i].collidedFromLeft(r)) {
-			if (colType == CollisionType::HORIZONTAL)
-				return CollisionType::CORNER;
-			colType = CollisionType::VERTICAL;
-		}
-	}
-	return colType;
 }
 
 void Map::getScannableTerrains() {
@@ -305,13 +238,7 @@ void Map::update(float delta) {
 			visibilityMap.reset((y * (lightMapW)) + x);
 		}
 	}
-	//for (int y = (checkStart.y); y <= (checkStart.y) + (localHeight); y++) {
-	//	for (int x = (checkStart.x); x <= (checkStart.x) + (localWidth); x++) {
-	//		terrains[(y * w) + x].setNonVisible();
-	//	}
-	//}
 	shadowEngine.computeVisibleCellsGradient(getPositionInLightMap(chr->pos.x, chr->pos.y), 40);
-	//shadowEngine.computeVisibleCells(chr->getMapPosition(), 30);
 	render(delta);
 }
 
@@ -513,36 +440,13 @@ void Map::render(float delta) {
 			}
 		}
 	}
-	if (drawDebug) {
-		for (int i = 0; i < collisionMap.size(); i++) {
-			collisionMap[i].drawDebugBox();
-		}
-	}
 }
 
-void Map::renderWallAndFogLayer(float delta) {
+void Map::renderWallLayer(float delta) {
 	int localHeight = checkEnd.y - checkStart.y;
 	if (localHeight + 1 < getHeight())
 		localHeight = localHeight + 1;
 	int localWidth = checkEnd.x - checkStart.x;
-	int fogW = terrainW / 4;
-	int fogH = terrainH / 4;
-	for (int y = (checkStart.y * 4); y <= (checkStart.y * 4) + (localHeight * 4) + 3; y++) {
-		for (int x = (checkStart.x * 4); x <= (checkStart.x * 4) + (localWidth * 4) + 3; x++) {
-			if (!lightMap[(y * lightMapW) + x] && !visibilityMap[(y * lightMapW) + x]) {
-				TextureManager::drawResized(SpriteBank::Instance().Fog, (x * fogW) - (terrainW / 2), (y * fogH) - (terrainH / 2), fogW, fogH);
-			}
-		}
-	}
-
-	/*for (int y = (checkStart.y); y <= (checkStart.y) + (localHeight); y++) {
-		for (int x = (checkStart.x); x <= (checkStart.x) + (localWidth); x++) {
-			int drawX = terrains[(y * w) + x].getDrawX();
-			int drawY = terrains[(y * w) + x].getDrawY();
-			if(!terrains[(y * w) + x].isVisible() && !terrains[(y * w) + x].obstacle)
-				TextureManager::drawResized(SpriteBank::Instance().Fog, drawX, drawY, terrainW, terrainH);
-		}
-	}*/
 
 	//TODO: Optimize the wall drawing subroutine to reduce runtime.
 	for (int y = checkStart.y; y <= checkStart.y + localHeight; y++) {
@@ -552,6 +456,39 @@ void Map::renderWallAndFogLayer(float delta) {
 			if (terrains[(y * w) + x].obstacle) {
 				drawWall(drawX, drawY, x, y, terrains[(y * w) + x], delta);
 			}
+			if (chr->getMapPosition().y == y) {
+				chr->render();
+			}
+		}
+	}
+}
+
+void Map::renderFogLayer() {
+	int localHeight = checkEnd.y - checkStart.y;
+	if (localHeight + 1 < getHeight())
+		localHeight = localHeight + 1;
+	int localWidth = checkEnd.x - checkStart.x;
+	short fogW = terrainW / 2;
+	short fogH = terrainH / 2;
+	short actualFogW = fogW / 2;
+	short actualFogH = fogH / 2;
+	bool hasWallTexture1 = false;
+	bool hasWallTexture2 = false;
+	//We want to ignore fog drawing in areas occupied by a wall texture
+	for (int y = (checkStart.y * 4); y <= (checkStart.y * 4) + (localHeight * 4) + 3; y++) {
+		for (int x = (checkStart.x * 4); x <= (checkStart.x * 4) + (localWidth * 4) + 3; x++) {
+			if (((y + 2) * lightMapW) + x < MAX_MAP_DIMENSION * 16) {
+				hasWallTexture1 = lightMap[((y + 2) * lightMapW) + x];
+			}
+			if (((y + 4) * lightMapW) + x < MAX_MAP_DIMENSION * 16) {
+				hasWallTexture2 = lightMap[((y + 4) * lightMapW) + x];
+			}
+			if (!lightMap[(y * lightMapW) + x] && !visibilityMap[(y * lightMapW) + x]) {
+				if (!hasWallTexture1 && !hasWallTexture2)
+					TextureManager::drawResized(SpriteBank::Instance().Fog, ((x * actualFogW) - (terrainW / 2)) - (fogW / 4), ((y * actualFogH) - (terrainH / 2)) - (fogH / 4), fogW, fogH);
+			}
+			hasWallTexture1 = false;
+			hasWallTexture2 = false;
 		}
 	}
 }

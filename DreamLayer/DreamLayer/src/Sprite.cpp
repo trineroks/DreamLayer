@@ -12,12 +12,12 @@ Sprite::Sprite() {
 Sprite::~Sprite() {
 }
 
-void Sprite::setPosition(int _x, int _y) {
+void Sprite::setPosition(int pixelx, int pixely) {
 	prevPos.x = pos.x;
 	prevPos.y = pos.y;
 
-	pos.x = _x;
-	pos.y = _y;
+	pos.x = pixelx;
+	pos.y = pixely;
 
 	xdraw = (int)pos.x - xoffset;
 	ydraw = (int)pos.y - yoffset;

@@ -30,6 +30,10 @@ public:
 		return *this;
 	}
 
+	bool operator==(const Point &p) const {
+		return (this->x == p.x && this->y == p.y);
+	}
+
 	Point(int _x, int _y) : x(_x), y(_y) {}
 	Point() {}
 

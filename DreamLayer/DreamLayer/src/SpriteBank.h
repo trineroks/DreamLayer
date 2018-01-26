@@ -16,8 +16,6 @@ public:
 
 	TextureRegion Player;
 	TextureRegion TestCollisionBox;
-	TextureRegion Spy;
-	TextureRegion SpyHolstered;
 	TextureRegion Crosshair;
 	TextureRegion Bullet;
 
@@ -46,13 +44,18 @@ public:
 	TextureRegion WallVertTopEnd;
 	TextureRegion WallVertRIntersect;
 
+	TextureRegion PlayerN;
+	TextureRegion PlayerS;
+	TextureRegion PlayerNE;
+	TextureRegion PlayerSE;
+	TextureRegion PlayerE;
+
 	TextureRegion Wall;
 	TextureRegion Fog;
 
 private:
-	SDL_Texture* sprite;
+	SDL_Texture* player;
 	SDL_Texture* box;
-	SDL_Texture* spy;
 	SDL_Texture* crosshair;
 	SDL_Texture* bullet;
 
@@ -60,7 +63,6 @@ private:
 	SDL_Texture* wall;
 	SDL_Texture* walltop;
 
-	SDL_Texture* spyHolstered;
 	SDL_Texture* fog;
 };
 

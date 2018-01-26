@@ -19,7 +19,8 @@ public:
 
 	Sprite();
 
-	void setPosition(int _x, int _y);
+	//Set position in terms of pixels
+	void setPosition(int pixelx, int pixely);
 	
 	void setCollisionBox(Rect rect);
 	void setTextureRegion(TextureRegion &tex);

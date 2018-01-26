@@ -11,6 +11,13 @@ Terrain::Terrain(short _w, short _h) {
 Terrain::~Terrain() {
 }
 
+void Terrain::save(BinSerializer* b) {
+}
+
+void Terrain::load(BinReader* b) {
+
+}
+
 void Terrain::setPosition(int _x, int _y) {
 	x = _x * w;
 	y = _y * h;
@@ -36,12 +43,15 @@ void Terrain::setTile(unsigned char _tile) {
 	switch (tile) {
 	case Tile::wall1:
 		obstacle = true;
+		wall = true;
 		break;
 	case Tile::wall2:
 		obstacle = true;
+		wall = true;
 		break;
 	case Tile::wall3:
 		obstacle = true;
+		wall = true;
 		break;
 	case Tile::wallwater:
 		obstacle = true;
@@ -49,6 +59,7 @@ void Terrain::setTile(unsigned char _tile) {
 		break;
 	default:
 		obstacle = false;
+		wall = false;
 		break;
 	}
 	modifyDrawCoords();

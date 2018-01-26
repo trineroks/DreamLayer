@@ -8,9 +8,10 @@
 #include "Character.h"
 #include <bitset>
 #include <vector>
+#include "Serializable.h"
 
 class Character;
-class Map {
+class Map : public Serializable {
 public:
 	Map();
 	~Map();
@@ -19,18 +20,21 @@ public:
 		chr = &player;
 	}
 
+	void save(BinSerializer* b) override;
+	void load(BinReader* b) override;
+
 	void generate();
-	void generateCollisionMap();
 	void update(float delta);
 	void render(float delta);
-	void renderWallAndFogLayer(float delta);
+	void renderWallLayer(float delta);
+	void renderFogLayer();
+	bool tileIsObstacle(int pixelx, int pixely);
+	bool tileIsObstacle(Point pixel);
 
-	bool isCollidingPredict(Sprite* sprite);
-	bool isColliding(Sprite* sprite);
+	bool isTileTraversableAI(Point start, Point end, Sprite &sprite);
 
-	char isCollidingWithType(Sprite* sprite);
-
-	bool testCollideDirection(Sprite* sprite);
+	bool willCollideHandle(Sprite* sprite);
+	bool isColliding(Rect collBox);
 
 	void clearMap();
 
@@ -42,7 +46,8 @@ public:
 	//Using pixel coordinates, return the lightmap coordinate at this area.
 	Point getPositionInLightMap(int pixelx, int pixely);
 
-	//Using map coordinates, return the pixel coordinate of this area.
+	//Using map coordinates, return the pixel coordinate of this area. Pixel coordinate
+	//will be centered in the square.
 	Point getPixelPositionInMap(int _x, int _y);
 
 	//Using pixel coordinates, return the terrain at this specified area.
@@ -51,11 +56,11 @@ public:
 	Terrain* getTerrainAtTerrains(int _x, int _y);
 	Terrain* getTerrainAtTerrains(Point &p);
 
-	int getWidth() {
+	const int getWidth() const {
 		return w;
 	}
 
-	int getHeight() {
+	const int getHeight() const {
 		return h;
 	}
 
@@ -76,7 +81,6 @@ public:
 	}
 	bool drawDebug = false;
 private:
-	bool rowIsObstacle(int x, int y, int length, std::bitset<MAX_MAP_DIMENSION>* bset);
 	void getScannableTerrains();
 
 	void drawWall(int drawX, int drawY, int mapX, int mapY, Terrain &t, float delta);
@@ -88,7 +92,6 @@ private:
 
 	ShadowCast shadowEngine;
 
-	std::vector<Rect> collisionMap;
 	//Locations (simple variable sized rect), Enemies
 	int w, h;
 	short terrainW, terrainH;

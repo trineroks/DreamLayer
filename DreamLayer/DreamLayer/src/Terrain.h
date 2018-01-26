@@ -1,8 +1,9 @@
 #pragma once
 #include "Rect.h"
 #include "Tile.h"
+#include "Serializable.h"
 
-class Terrain {
+class Terrain : public Serializable {
 public:
 	Terrain(short _w, short _h);
 	Terrain() {}
@@ -13,11 +14,16 @@ public:
 	//to pixel position within the function.
 	void setPosition(int _x, int _y);
 
-	int getX() {
+	void save(BinSerializer* b) override;
+	void load(BinReader* b) override;
+
+	//Position in pixels, oriented at center
+	int getPixelPosX() {
 		return x;
 	}
 
-	int getY() {
+	//Position in pixels, oriented at center
+	int getPixelPosY() {
 		return y;
 	}
 
@@ -42,18 +48,6 @@ public:
 	const unsigned char getTile() const {
 		return tile;
 	}
-	
-	bool isVisible() {
-		return visible;
-	}
-
-	void setVisible() {
-		visible = true;
-	}
-
-	void setNonVisible() {
-		visible = false;
-	}
 
 	short getAnimationIndex() {
 		return animationIndex;
@@ -74,7 +68,9 @@ public:
 	}
 
 	bool obstacle = false;
+	bool wall = false;
 private:
+
 	void modifyDrawCoords();
 	int x = 0;
 	int y = 0;
@@ -83,7 +79,6 @@ private:
 	short h = 0;
 
 	unsigned char tile = Tile::nil;
-	bool visible = false;
 
 	int drawX = 0;
 	int drawY = 0;

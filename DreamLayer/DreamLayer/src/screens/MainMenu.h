@@ -41,9 +41,9 @@ private:
 	Rect* test;
 
 	void testAngleUpdate();
-	void bounceBullet(Sprite* bullet);
 
 	char editing = 0;
+	bool fog = true;
 
 	int mousex = 0;
 	int mousey = 0;

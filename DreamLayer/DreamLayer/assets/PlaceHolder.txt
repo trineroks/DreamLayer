@@ -1,0 +1,40 @@
+PlaceHolder.png
+size: 64, 480
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+PlaceHolderE
+  rotate: false
+  xy: 0, 0
+  size: 64, 96
+  orig: 64, 96
+  offset: 0, 0
+  index: -1
+PlaceHolderN
+  rotate: false
+  xy: 0, 96
+  size: 64, 96
+  orig: 64, 96
+  offset: 0, 0
+  index: -1
+PlaceHolderNE
+  rotate: false
+  xy: 0, 192
+  size: 64, 96
+  orig: 64, 96
+  offset: 0, 0
+  index: -1
+PlaceHolderS
+  rotate: false
+  xy: 0, 288
+  size: 64, 96
+  orig: 64, 96
+  offset: 0, 0
+  index: -1
+PlaceHolderSE
+  rotate: false
+  xy: 0, 384
+  size: 64, 96
+  orig: 64, 96
+  offset: 0, 0
+  index: -1

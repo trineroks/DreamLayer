@@ -11,11 +11,7 @@ public:
 	void computeVisibleCells(Point start, int _range);
 	void computeVisibleCellsGradient(Point start, int _range);
 private:
-	void scanOctant(int octant, int depth, Point start, Point startSlopeVector, double endSlope);
-	void scanOctantTest(int octant, int depth, Point start, double startSlope, double endSlope);
-	void scanOctantLightMap(int octant, int depth, Point start, double startSlope, double endSlope);
-	int range = 0;
-	Point start;
+	void scanOctant(int octant, int depth, Point start, double startSlope, double endSlope, int range);
 	Map* map;
 };
 
