@@ -15,6 +15,7 @@ Map::Map() {
 	lightMapH = h * 4;
 
 	shadowEngine.setMap(*this);
+	pathFinder.setMap(*this);
 }
 
 Map::~Map() {
@@ -26,6 +27,19 @@ void Map::save(BinSerializer* b) {
 
 void Map::load(BinReader* b) {
 
+}
+
+bool Map::getPath(Point start, Point end, Sprite &sprite, std::stack<Point>& pathOutput) {
+	return pathFinder.findPath(start, end, pathOutput, sprite);
+}
+
+void Map::resetPaths() {
+	int index = 0;
+	for (int y = 0; y < getHeight(); y++) {
+		for (int x = 0; x < getWidth(); x++) {
+			getTerrainAtTerrains(Point(x, y))->testPath = false;
+		}
+	}
 }
 
 bool Map::tileIsObstacle(int pixelx, int pixely) {
@@ -192,7 +206,7 @@ bool Map::isTileTraversableAI(Point start, Point end, Sprite &sprite) {
 	sprite.setPosition(midx, midy);
 	ret = isColliding(sprite.getRect());
 	sprite.revertPos();
-	return ret;
+	return !ret;
 }
 
 //Check all 4 corners of the collision box for collision
@@ -438,6 +452,8 @@ void Map::render(float delta) {
 			default:
 				break;
 			}
+			if (terrains[(y * w) + x].testPath)
+				TextureManager::drawResized(SpriteBank::Instance().PathSegment, drawX, drawY, terrainW, terrainH);
 		}
 	}
 }
@@ -456,8 +472,11 @@ void Map::renderWallLayer(float delta) {
 			if (terrains[(y * w) + x].obstacle) {
 				drawWall(drawX, drawY, x, y, terrains[(y * w) + x], delta);
 			}
-			if (chr->getMapPosition().y == y) {
+			if (chr != nullptr && chr->getMapPosition().y == y) {
 				chr->render();
+			}
+			if (mst != nullptr && mst->getMapPosition().y == y) {
+				mst->render();
 			}
 		}
 	}

@@ -4,16 +4,6 @@
 int getDistanceSquared(int x1, int y1, int x2, int y2);
 double getSlope(double x1, double y1, double x2, double y2, bool invert);
 
-void ShadowCast::computeVisibleCells(Point start, int _range) {
-	Terrain* t = map->getTerrainAtTerrains(start.x, start.y);
-	if (t)
-		t->setVisible();
-
-	for (int i = 0; i < 8; i++) {
-		scanOctant(i, 1, start, 1.0, 0.0, _range);
-	}
-}
-
 void ShadowCast::computeVisibleCellsGradient(Point start, int _range) {
 	map->setVisibilityAt(start.x, start.y);
 	for (int i = 0; i < 8; i++) {

@@ -6,19 +6,30 @@
 #include "Terrain.h"
 #include "Sprite.h"
 #include "Character.h"
+#include "Monster.h"
 #include <bitset>
 #include <vector>
+#include <queue>
 #include "Serializable.h"
+#include "AStarPathfind.h"
 
 class Character;
+class Monster;
 class Map : public Serializable {
 public:
 	Map();
 	~Map();
 
-	void addPlayer(Character &player) {
+	void addPlayer(Character& player) {
 		chr = &player;
 	}
+
+	void addMonster(Monster& monster) {
+		mst = &monster;
+	}
+
+	bool getPath(Point start, Point end, Sprite &sprite, std::stack<Point>& pathOutput);
+	void resetPaths();
 
 	void save(BinSerializer* b) override;
 	void load(BinReader* b) override;
@@ -91,6 +102,7 @@ private:
 	int lightMapW, lightMapH;
 
 	ShadowCast shadowEngine;
+	AStarPathfind pathFinder;
 
 	//Locations (simple variable sized rect), Enemies
 	int w, h;
@@ -99,6 +111,7 @@ private:
 	Point checkStart = Point(0, 0);
 	Point checkEnd = Point(0, 0);
 
-	Character* chr;
+	Character* chr = nullptr;
+	Monster* mst = nullptr;
 };
 

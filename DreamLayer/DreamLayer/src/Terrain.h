@@ -69,6 +69,8 @@ public:
 
 	bool obstacle = false;
 	bool wall = false;
+
+	bool testPath = false;
 private:
 
 	void modifyDrawCoords();

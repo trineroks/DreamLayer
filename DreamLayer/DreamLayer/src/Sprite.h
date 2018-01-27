@@ -9,12 +9,6 @@ class TextureRegion;
 class Rect;
 class Sprite : public Drawable {
 public:
-	typedef enum {
-		TOPLEFT = 0,
-		CENTER,
-		BOTTOMCENTER,
-	}PositionType;
-
 	Sprite(TextureRegion &texRegion);
 
 	Sprite();

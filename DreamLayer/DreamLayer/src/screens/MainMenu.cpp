@@ -24,18 +24,28 @@ void MainMenu::init() {
 	map.generate();
 	//map.drawDebug = true;
 	Point p = map.getPixelPositionInMap(5, 5);
+	Point mp = map.getPixelPositionInMap(8, 8);
 
 	sprite = Character(SpriteBank::Instance().PlayerN, SpriteBank::Instance().PlayerS);
 	sprite.setCollisionBox(Rect(0,0,32, 16));
 	sprite.drawDebug = true;
-	sprite.setOrientationType(sprite.BOTTOMCENTER);
+	sprite.setOrientationType(BOTTOMCENTER);
 	sprite.setPosition(p.x, p.y);
 	sprite.scale(Game::getScaleW(), Game::getScaleH());
 	
 	map.addPlayer(sprite);
 
+	monster = Monster(SpriteBank::Instance().PlayerSE);
+	monster.setCollisionBox(Rect(0, 0, 32, 16));
+	monster.drawDebug = true;
+	monster.setOrientationType(BOTTOMCENTER);
+	monster.setPosition(mp.x, mp.y);
+	monster.scale(Game::getScaleW(), Game::getScaleH());
+
+	map.addMonster(monster);
+
 	crosshair = Sprite(SpriteBank::Instance().Crosshair);
-	crosshair.setOrientationType(crosshair.CENTER);
+	crosshair.setOrientationType(CENTER);
 
 	//SDL_ShowCursor(SDL_DISABLE);
 	
@@ -54,6 +64,7 @@ void MainMenu::update(float deltaTime) {
 	if (currentTime >= FRAMEDELAY) {
 		Game::camera.update();
 		sprite.update(&map);
+		monster.update(&map);
 		crosshair.update();
 		currentTime = 0;
 	}
@@ -71,7 +82,6 @@ void MainMenu::testAngleUpdate() {
 }
 
 void MainMenu::draw() {
-	sprite.scale(Game::getScaleW(), Game::getScaleH());
 }
 
 void MainMenu::keyUp(SDL_Keycode key) {
@@ -112,6 +122,9 @@ void MainMenu::keyUp(SDL_Keycode key) {
 		break;
 	case SDLK_t:
 		SpriteBank::Instance().reload();
+		break;
+	case SDLK_p:
+		monster.generateWaypoints(&map, sprite.getMapPosition());
 		break;
 	default:
 		editing = 0;

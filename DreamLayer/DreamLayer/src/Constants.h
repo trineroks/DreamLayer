@@ -21,6 +21,12 @@ namespace CollisionType {
 	const char CORNER = 3;
 }
 
+typedef enum {
+	TOPLEFT = 0,
+	CENTER,
+	BOTTOMCENTER,
+}PositionType;
+
 class Point {
 public:
 	Point& operator=(const Point &p) {

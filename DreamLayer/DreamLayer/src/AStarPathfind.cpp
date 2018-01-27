@@ -3,7 +3,8 @@
 #include <vector>
 #include <functional>
 #include <math.h>
-#include <set>
+#include <stdio.h>
+#include "Map.h"
 
 //Cost of moving non-diagonally
 const static float ND = 1.0f;
@@ -17,10 +18,6 @@ float heuristic(Point p, Point goal) {
 	return ND * std::max(dx, dy) + (D - 1) * std::min(dx, dy);
 }
 
-bool operator<(const Node &n1, const Node &n2) {
-	return n1.f < n2.f;
-}
-
 void generatePath(Node& n, std::stack<Point>& finalPath) {
 	finalPath.push(n.p);
 	Node* curr;
@@ -32,11 +29,11 @@ void generatePath(Node& n, std::stack<Point>& finalPath) {
 	return;
 }
 
-void AStarPathfind::getNeighbors(Node* n, Node* neighbors, Map& map, Sprite& sprite) {
+void AStarPathfind::getNeighbors(Node* n, Node* neighbors, Sprite& sprite) {
 	Point p = n->p;
 	for (int i = 0; i < 8; i++) {
 		Point p1 = Point(p.x + directions[i].x, p.y + directions[i].y);
-		if (map.isTileTraversableAI(p, p1, sprite)) {
+		if (map->isTileTraversableAI(p, p1, sprite)) {
 			if (i < 4)
 				neighbors[i] = Node(p1, n->g + ND);
 			else
@@ -49,8 +46,6 @@ void AStarPathfind::getNeighbors(Node* n, Node* neighbors, Map& map, Sprite& spr
 	}
 }
 
-using NodeSet = std::set<Node*>;
-
 Node* findNodeInList(NodeSet &set, Point p) {
 	for (auto node : set) {
 		if (node->p == p) {
@@ -60,26 +55,34 @@ Node* findNodeInList(NodeSet &set, Point p) {
 	return nullptr;
 }
 
+void AStarPathfind::freeNodeList(NodeSet& n) {
+	for (auto node = n.begin(); node != n.end();) {
+		delete *node;
+		node = n.erase(node);
+	}
+}
 
-bool AStarPathfind::findPath(Map& map, Point start, Point dest, std::stack<Point>&finalPath, Sprite& sprite) {
-	int width = map.getWidth();
-	int height = map.getHeight();
+bool AStarPathfind::findPath(Point start, Point dest, std::stack<Point>&finalPath, Sprite& sprite) {
+	int width = map->getWidth();
+	int height = map->getHeight();
 	bool found = false;
 
 	NodeSet openList;
 	NodeSet closedList;
 	
-	Node startNode(start, 0);
-	Node goalNode(dest, 0);
+	Node* startNode = new Node(start, 0);
 
-	startNode.f = startNode.g + heuristic(start, dest);
+	startNode->f = startNode->g + heuristic(start, dest);
 
-	openList.insert(&startNode);
-
-	Node* neighbors = new Node[8];
+	openList.insert(startNode);
 
 	while (!openList.empty()) {
 		Node* curr = *openList.begin();
+		for (auto node : openList) {
+			if (node->f <= curr->f) {
+				curr = node;
+			}
+		}
 		if (curr->p == dest) {
 			generatePath(*curr, finalPath);
 			found = true;
@@ -87,24 +90,27 @@ bool AStarPathfind::findPath(Map& map, Point start, Point dest, std::stack<Point
 		}
 		openList.erase(std::find(openList.begin(), openList.end(), curr));
 		closedList.insert(curr);
-		getNeighbors(curr, neighbors, map, sprite);
 		for (int i = 0; i < 8; i++) {
-			//its x/y would not be negative if it was a valid neighbor
-			Point neighborPoint = neighbors[i].p;
-			if (neighborPoint.x >= 0 && findNodeInList(closedList, neighborPoint) == nullptr) {
-				neighbors[i].f = neighbors[i].g + heuristic(neighbors[i].p, dest);
-				Node *successor = findNodeInList(openList, neighborPoint);
+			Point p1 = Point(curr->p.x + directions[i].x, curr->p.y + directions[i].y);
+			if (map->isTileTraversableAI(curr->p, p1, sprite) && findNodeInList(closedList, p1) == nullptr) {
+				float gCost = curr->g + ((i < 4) ? ND : D);
+				Node* successor = findNodeInList(openList, p1);
 				if (successor == nullptr) {
-					openList.insert(&neighbors[i]);
+					successor = new Node(p1, gCost);
+					successor->parent = curr;
+					successor->f = gCost + heuristic(p1, dest);
+					openList.insert(successor);
 				}
-				else if (neighbors[i].g < successor->g) {
-					successor->g = neighbors[i].g;
-					successor->parent = neighbors[i].parent;
+				else if (gCost < successor->g) {
+					successor->g = gCost;
+					successor->parent = curr;
 				}
 			}
 		}
 	}
 	//remember to deallocate memory!
-	delete[] neighbors;
+	freeNodeList(openList);
+	freeNodeList(closedList);
+
 	return found;
 }

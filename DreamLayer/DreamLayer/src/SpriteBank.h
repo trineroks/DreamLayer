@@ -53,6 +53,8 @@ public:
 	TextureRegion Wall;
 	TextureRegion Fog;
 
+	TextureRegion PathSegment;
+
 private:
 	SDL_Texture* player;
 	SDL_Texture* box;
@@ -64,5 +66,6 @@ private:
 	SDL_Texture* walltop;
 
 	SDL_Texture* fog;
+	SDL_Texture* pathsegment;
 };
 

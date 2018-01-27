@@ -23,6 +23,8 @@ void SpriteBank::load() {
 	walltop = TextureManager::loadTexture("assets/WallTop.png");
 	player = TextureManager::loadTexture("assets/PlaceHolder.png");
 
+	pathsegment = TextureManager::loadTexture("assets/pathHighlight.png");
+
 	//find some way to eventually destroy these textures - combine them all into a spritesheet and make that a member of SpriteBank, destroy in clear()
 	box = TextureManager::loadTexture("assets/CollisionBox.png");
 	crosshair = TextureManager::loadTexture("assets/crosshairs.png");
@@ -35,6 +37,7 @@ void SpriteBank::load() {
 	Bullet = TextureRegion(bullet, 0, 0, 3, 8);
 
 	Fog = TextureRegion(fog, 0, 0, 32, 32);
+	PathSegment = TextureRegion(pathsegment, 0, 0, 64, 64);
 
 	Floor1 = TextureRegion(terrains, 0, 0, TILE_PIXELSIZE, TILE_PIXELSIZE);
 	Floor2 = TextureRegion(terrains, 64, 0, TILE_PIXELSIZE, TILE_PIXELSIZE);

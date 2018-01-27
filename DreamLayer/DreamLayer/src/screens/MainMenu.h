@@ -2,11 +2,13 @@
 #include "GameScreen.h"
 #include "../Sprite.h"
 #include "../Character.h"
+#include "../Monster.h"
 #include "../SpriteBank.h"
 #include "../Rect.h"
 #include "../Constants.h"
 #include "../Map.h"
 #include <vector>
+#include "../AStarPathfind.h"
 
 class Sprite;
 class Rect;
@@ -31,9 +33,13 @@ public:
 	void update(float deltaTime) override;
 	void draw();
 private:
+	AStarPathfind testfunc;
+
 	std::vector<Sprite> bullets;
 
 	Character sprite;
+	Monster monster;
+
 	Sprite nonControlled;
 	Sprite crosshair;
 	Map map;
