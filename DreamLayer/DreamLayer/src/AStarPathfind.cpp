@@ -29,6 +29,31 @@ void generatePath(Node& n, std::stack<Point>& finalPath) {
 	return;
 }
 
+void generatePathCulled(Node& n, std::stack<Point>& finalPath) {
+	finalPath.push(n.p);
+	Node* curr;
+	Point currDirection;
+	bool directionChanged = true;
+	curr = &n;
+	while (curr->parent != nullptr) {
+		if (directionChanged) {
+			currDirection = Point(curr->p.x - curr->parent->p.x, curr->p.y - curr->parent->p.y);
+			directionChanged = false;
+			curr = curr->parent;
+		} while (!directionChanged && curr->parent != nullptr) {
+			if (Point(curr->p.x - curr->parent->p.x, curr->p.y - curr->parent->p.y) == currDirection) {
+				curr = curr->parent;
+			}
+			else {
+				directionChanged = true;
+			}
+		}
+		finalPath.push(curr->p);
+	}
+	finalPath.pop();
+	return;
+}
+
 void AStarPathfind::getNeighbors(Node* n, Node* neighbors, Sprite& sprite) {
 	Point p = n->p;
 	for (int i = 0; i < 8; i++) {
@@ -63,6 +88,8 @@ void AStarPathfind::freeNodeList(NodeSet& n) {
 }
 
 bool AStarPathfind::findPath(Point start, Point dest, std::stack<Point>&finalPath, Sprite& sprite) {
+	float posX = sprite.pos.x;
+	float posY = sprite.pos.y;
 	int width = map->getWidth();
 	int height = map->getHeight();
 	bool found = false;
@@ -84,7 +111,7 @@ bool AStarPathfind::findPath(Point start, Point dest, std::stack<Point>&finalPat
 			}
 		}
 		if (curr->p == dest) {
-			generatePath(*curr, finalPath);
+			generatePathCulled(*curr, finalPath);
 			found = true;
 			break;
 		}
@@ -111,6 +138,8 @@ bool AStarPathfind::findPath(Point start, Point dest, std::stack<Point>&finalPat
 	//remember to deallocate memory!
 	freeNodeList(openList);
 	freeNodeList(closedList);
+	//set the sprite back to its original position
+	sprite.setPosition(posX, posY);
 
 	return found;
 }

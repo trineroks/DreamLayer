@@ -19,9 +19,9 @@ void Sprite::setPosition(int pixelx, int pixely) {
 	pos.x = pixelx;
 	pos.y = pixely;
 
-	xdraw = (int)pos.x - xoffset;
-	ydraw = (int)pos.y - yoffset;
-	rect.setPos((int)pos.x - collxOffset, (int)pos.y - collyOffset);
+	rect.setPos((int)pos.x - (collxOffset * rect.wscale), (int)pos.y - (collyOffset * rect.hscale));
+
+	updateDrawPositions();
 }
 
 void Sprite::setCollisionBox(Rect box) {
@@ -85,9 +85,8 @@ void Sprite::update() {
 	pos.x += delta.x * SPEED;
 	pos.y += delta.y * SPEED;
 
-	xdraw = (int)pos.x - (xoffset * wscale);
-	ydraw = (int)pos.y - (yoffset * hscale);
 	rect.setPos((int)pos.x - (collxOffset * rect.wscale), (int)pos.y - (collyOffset * rect.hscale));
+	updateDrawPositions();
 }
 
 Rect Sprite::getPredictiveRectX() {

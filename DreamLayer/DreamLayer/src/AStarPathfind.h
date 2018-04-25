@@ -16,6 +16,9 @@ public:
 	bool operator<(const Node &n) const {
 		return this->f < n.f;
 	}
+	bool operator==(const Node&n) const {
+		return this->p == n.p;
+	}
 };
 
 using NodeSet = std::set<Node*>;
@@ -26,7 +29,6 @@ public:
 							Point(-1, -1), Point(1, 1), Point(1, -1), Point(-1, 1)};
 	AStarPathfind() {};
 	bool findPath(Point start, Point dest, std::stack<Point>& finalPath, Sprite& sprite);
-	void testFunction();
 	void setMap(Map &_map) {
 		map = &_map;
 	}

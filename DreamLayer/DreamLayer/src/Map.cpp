@@ -33,6 +33,14 @@ bool Map::getPath(Point start, Point end, Sprite &sprite, std::stack<Point>& pat
 	return pathFinder.findPath(start, end, pathOutput, sprite);
 }
 
+bool Map::isWithinTileVicinity(Point pixelpos, Point mapDestPos) {
+	int x = terrains[(mapDestPos.y * w) + mapDestPos.x].getPixelPosX();
+	int y = terrains[(mapDestPos.y * w) + mapDestPos.x].getPixelPosY();
+	//10 pixels of breathing space should be enough
+	return !(pixelpos.x > x + 10 || pixelpos.x < x - 10 ||
+		pixelpos.y > y + 10 || pixelpos.y < y - 10);
+}
+
 void Map::resetPaths() {
 	int index = 0;
 	for (int y = 0; y < getHeight(); y++) {
@@ -201,11 +209,10 @@ bool Map::isTileTraversableAI(Point start, Point end, Sprite &sprite) {
 	int y1 = terrains[(start.y * w) + start.x].getPixelPosY();
 	int x2 = terrains[(end.y * w) + end.x].getPixelPosX();
 	int y2 = terrains[(end.y * w) + end.x].getPixelPosY();
-	int midx = (x1 + x2)/2;
-	int midy = (y1 + y2)/2;
-	sprite.setPosition(midx, midy);
+	x1 = (x1 + x2)/2;
+	y1 = (y1 + y2)/2;
+	sprite.setPosition(x1, y1);
 	ret = isColliding(sprite.getRect());
-	sprite.revertPos();
 	return !ret;
 }
 
@@ -452,8 +459,6 @@ void Map::render(float delta) {
 			default:
 				break;
 			}
-			if (terrains[(y * w) + x].testPath)
-				TextureManager::drawResized(SpriteBank::Instance().PathSegment, drawX, drawY, terrainW, terrainH);
 		}
 	}
 }
@@ -478,6 +483,14 @@ void Map::renderWallLayer(float delta) {
 			if (mst != nullptr && mst->getMapPosition().y == y) {
 				mst->render();
 			}
+		}
+	}
+	for (int y = checkStart.y; y <= checkStart.y + localHeight; y++) {
+		for (int x = checkStart.x; x <= checkStart.x + localWidth; x++) {
+			int drawX = terrains[(y * w) + x].getTopLeftX();
+			int drawY = terrains[(y * w) + x].getTopLeftY();
+			if (terrains[(y * w) + x].testPath)
+				TextureManager::drawResized(SpriteBank::Instance().PathSegment, drawX, drawY, terrainW, terrainH);
 		}
 	}
 }

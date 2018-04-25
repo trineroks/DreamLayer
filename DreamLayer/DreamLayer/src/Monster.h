@@ -13,13 +13,17 @@ public:
 
 	void generateWaypoints(Map* map, Point p);
 	void update(Map* map);
+	void updateSprite();
 
 	Point getMapPosition() {
 		return mapPosition;
 	}
 
 private:
+	Point currentMoveOrder = Point();
 	Point mapPosition;
 	std::queue<Point> wayPoints;
+	//eliminate this second one soon
+	std::queue<Point> moveWayPoints;
 };
 

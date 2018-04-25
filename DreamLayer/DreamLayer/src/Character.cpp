@@ -19,7 +19,7 @@ void Character::update(Map* map) {
 	Sprite::update();
 	mapPosition = map->getPositionInMap(pos.x, pos.y);
 	map->willCollideHandle(this);
-	printf("x: %d, y: %d\n", mapPosition.x, mapPosition.y);
+	//printf("x: %d, y: %d\n", mapPosition.x, mapPosition.y);
 }
 
 void Character::updateHolstered(Map* map) {

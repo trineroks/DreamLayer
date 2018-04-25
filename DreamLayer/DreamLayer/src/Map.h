@@ -31,6 +31,8 @@ public:
 	bool getPath(Point start, Point end, Sprite &sprite, std::stack<Point>& pathOutput);
 	void resetPaths();
 
+	bool isWithinTileVicinity(Point pixelpos, Point mapDestPos);
+
 	void save(BinSerializer* b) override;
 	void load(BinReader* b) override;
 

@@ -24,7 +24,7 @@ void MainMenu::init() {
 	map.generate();
 	//map.drawDebug = true;
 	Point p = map.getPixelPositionInMap(5, 5);
-	Point mp = map.getPixelPositionInMap(8, 8);
+	Point mp = map.getPixelPositionInMap(15, 15);
 
 	sprite = Character(SpriteBank::Instance().PlayerN, SpriteBank::Instance().PlayerS);
 	sprite.setCollisionBox(Rect(0,0,32, 16));
@@ -68,6 +68,7 @@ void MainMenu::update(float deltaTime) {
 		crosshair.update();
 		currentTime = 0;
 	}
+	
 	map.willCollideHandle(&sprite);
 	testAngleUpdate();
 	map.update(deltaTime);
@@ -125,6 +126,9 @@ void MainMenu::keyUp(SDL_Keycode key) {
 		break;
 	case SDLK_p:
 		monster.generateWaypoints(&map, sprite.getMapPosition());
+		break;
+	case SDLK_m:
+		monster.setPosition(mousex, mousey);
 		break;
 	default:
 		editing = 0;

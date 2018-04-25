@@ -51,18 +51,36 @@ public:
 		return rect;
 	}
 
+	void updateDrawPositions() {
+		xdraw = (int)pos.x - (xoffset * wscale);
+		ydraw = (int)pos.y - (yoffset * hscale);
+	}
+
 	void revertXPos() {
 		pos.x = prevPos.x;
+		rect.revertXPos();
+		updateDrawPositions();
 	}
 
 	void revertYPos() {
 		pos.y = prevPos.y;
+		rect.revertYPos();
+		updateDrawPositions();
 	}
 
 	void revertPos() {
 		pos.x = prevPos.x;
 		pos.y = prevPos.y;
 		rect.revertPos();
+		updateDrawPositions();
+	}
+
+	int getCollXOffset() {
+		return collxOffset;
+	}
+
+	int getCollYOffset() {
+		return collyOffset;
 	}
 
 protected:

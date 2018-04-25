@@ -29,19 +29,16 @@ typedef enum {
 
 class Point {
 public:
-	Point& operator=(const Point &p) {
-		this->x = p.x;
-		this->y = p.y;
+	Point(int _x, int _y) : x(_x), y(_y) {}
+	Point() {}
 
-		return *this;
+	bool isValid() {
+		return !(x == -1 || y == -1);
 	}
 
 	bool operator==(const Point &p) const {
 		return (this->x == p.x && this->y == p.y);
 	}
-
-	Point(int _x, int _y) : x(_x), y(_y) {}
-	Point() {}
 
 	int x = -1;
 	int y = -1;
