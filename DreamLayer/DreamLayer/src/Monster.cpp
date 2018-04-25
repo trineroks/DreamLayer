@@ -28,12 +28,16 @@ void Monster::update(Map* map) {
 		int delty = delt.y - (int)pos.y;
 		if (deltx != 0) {
 			deltx = (deltx < 0) ? -1 : 1;
+			delta.x = deltx * 2.0f;
 		}
 		if (delty != 0) {
 			delty = (delty < 0) ? -1 : 1;
+			delta.y = delty * 2.0f;
 		}
-		delta.x = deltx * 2.0f;
-		delta.y = delty * 2.0f;
+		if (delty != 0 && deltx != 0) {
+			delta.y = delty * sqrt(2.0f);
+			delta.x = deltx * sqrt(2.0f);
+		}
 		if (map->isWithinTileVicinity(Point((int)pos.x, (int)pos.y), moveWayPoints.front())) {
 			moveWayPoints.pop();
 		}

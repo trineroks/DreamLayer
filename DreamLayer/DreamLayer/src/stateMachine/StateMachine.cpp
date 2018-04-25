@@ -33,14 +33,14 @@ void StateMachine::pushScreen(GameScreen* screen) {
 
 void StateMachine::gameTick(float deltaTime) {
 	if (!screenStack.empty()) {
-		processInput();
-		screenStack.back()->update(deltaTime);
+		processTick(deltaTime);
+		//screenStack.back()->update(deltaTime);
 	}
 	else
 		printf("The state machine is empty!\n");
 }
 
-void StateMachine::processInput() {
+void StateMachine::processTick(float delta) {
 	GameScreen* screen = screenStack.back();
 	SDL_Event &event = Game::event;
 	while (SDL_PollEvent(&event)) {
@@ -79,4 +79,5 @@ void StateMachine::processInput() {
 			exit = true;
 		}
 	}
+	screen->update(delta);
 }

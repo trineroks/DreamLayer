@@ -18,7 +18,7 @@ public:
 	bool getExitState() { return exit; }
 
 private:
-	void processInput();
+	void processTick(float delta);
 
 	StateMachine();
 	StateMachine(StateMachine const&);
